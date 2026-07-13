@@ -43,6 +43,12 @@
 build/
 Build/
 build-*/
+# build
+/build
+/out
+*.vs
+*.qtcreator
+
 
 # CMake generated files
 CMakeFiles/
