@@ -1,7 +1,9 @@
 #include "OpenGLRenderer.h"
 #include "glview.h"
-#include "singleton.h"
+#include "Singleton.h"
 #include "OpenGLFunc.h"
+#include "GraphicsAPI.h"
+
 
 OpenGLRenderer::OpenGLRenderer()
     : m_VBO(QOpenGLBuffer::VertexBuffer),
@@ -75,27 +77,15 @@ void OpenGLRenderer::ClearColor(const float32_t& fR, const float32_t& fG, const 
 }
 
 void OpenGLRenderer::InitShader(const QShaderInfo& shaderInfo)
-{
-    bool result = true;
-    result = m_shader.addShaderFromSourceFile(QOpenGLShader::Vertex, shaderInfo.strVertexShaderPath);
-    if (!result) {
-        qDebug() << m_shader.log();
-    }
-    result = m_shader.addShaderFromSourceFile(QOpenGLShader::Fragment, shaderInfo.strFragmentShaderPath);
-    if (!result) {
-        qDebug() << m_shader.log();
-    }
-    result = m_shader.link();
-    if (!result) {
-        qDebug() << m_shader.log();
-    }
+{   
+    m_pShader = m_GraphicsAPI.CreateShaderProgram("1.model_loading");
 }
 
 void OpenGLRenderer::Draw(const std::vector<float32_t>& arrVertices, const std::vector<uint32_t>& arrIndices)
 {
-    m_shader.bind();
+    m_pShader->bind();
 
-    GLuint uShaderID = m_shader.programId();
+    GLuint uShaderID = m_pShader->programId();
     GLint uColorLoc = SINGLETON_PTR(OpenGLFunc)->glGetUniformLocation(uShaderID, "uColor");
 
     SINGLETON_PTR(OpenGLFunc)->glUniform4f(uColorLoc, 0.0f, 1.0f, 0.0f, 1.0f);
@@ -103,7 +93,7 @@ void OpenGLRenderer::Draw(const std::vector<float32_t>& arrVertices, const std::
     SINGLETON_PTR(OpenGLFunc)->glBindVertexArray(m_uVao);
     SINGLETON_PTR(OpenGLFunc)->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-    m_shader.release();
+    m_pShader->release();
 }
 
 

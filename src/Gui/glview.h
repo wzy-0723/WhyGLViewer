@@ -8,7 +8,7 @@
 #include <QOpenGLBuffer>
 
 #include "OpenGLRenderer.h"
-#include "singleton.h"
+#include "Singleton.h"
 
 
 class GLView : public QOpenGLWidget

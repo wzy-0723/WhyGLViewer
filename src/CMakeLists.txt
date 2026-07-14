@@ -10,14 +10,17 @@ qt_add_executable(${PROJECT_NAME}
     ${PROJECT_SOURCES}
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE 
-    .
-    ./Gui
-	./Renderer
-	./Util)
+target_include_directories(${PROJECT_NAME} 
+    PRIVATE 
+        .
+        ./Gui
+	    ./Renderer
+	    ./Util
+)
 
 
-target_link_libraries(${PROJECT_NAME} PRIVATE 
+target_link_libraries(${PROJECT_NAME} 
+    PRIVATE 
         Qt::Core
         Qt::Gui
         Qt::Widgets 

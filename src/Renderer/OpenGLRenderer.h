@@ -1,11 +1,10 @@
 #pragma once
 #include <QOpenGLFunctions_4_5_Core>
 #include <QOpenGLShaderProgram>
-#include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
 #include "standard.h"
-
+#include "GraphicsAPI.h"
 // 以Qt的规范加载着色器
 struct QShaderInfo
 {
@@ -31,8 +30,9 @@ public:
 private:
 	QOpenGLVertexArrayObject m_VAO;
 	QOpenGLBuffer m_VBO, m_EBO;
-	QOpenGLShaderProgram m_shader;
-
+	//QOpenGLShaderProgram m_shader;
+	std::shared_ptr<QOpenGLShaderProgram> m_pShader;
+	why::GraphicsAPI m_GraphicsAPI;
 private:
 	GLuint m_uVao;
 };
