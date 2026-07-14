@@ -7,7 +7,7 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
 
-#include "opengl_renderer.h"
+#include "OpenGLRenderer.h"
 #include "singleton.h"
 
 

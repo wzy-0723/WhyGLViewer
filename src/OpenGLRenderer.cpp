@@ -1,4 +1,4 @@
-#include "opengl_renderer.h"
+#include "OpenGLRenderer.h"
 #include "glview.h"
 #include "singleton.h"
 #include "OpenGLFunc.h"

@@ -12,7 +12,8 @@ qt_add_executable(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
     .
-    ./OpenGL)
+    ./Gui
+	./Util)
 
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
