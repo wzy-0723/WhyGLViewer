@@ -7,9 +7,9 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
 
-#include "model.h"
+#include "opengl_renderer.h"
 
-class GLView : public QOpenGLWidget, QOpenGLFunctions_4_5_Core
+class GLView : public QOpenGLWidget
 {
     Q_OBJECT
 public:
@@ -22,13 +22,8 @@ protected:
     virtual void paintGL();
 
 private:
-    void initShader(QOpenGLShaderProgram& shader);
+    OpenGLRenderer* m_pOpenGLRenderer{ nullptr };
 
-private:
-    Model* m_model = nullptr;
-
-
-    QOpenGLShaderProgram m_lightShader;
 
 signals:
 };

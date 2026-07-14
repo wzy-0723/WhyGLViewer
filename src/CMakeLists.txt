@@ -1,4 +1,4 @@
-file(GLOB source CONFIGURE_DEPENDS *.h *.cpp *.qrc *.ui)
+file(GLOB_RECURSE source CONFIGURE_DEPENDS *.h *.cpp *.qrc *.ui)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets OpenGLWidgets Core Gui)
@@ -10,7 +10,9 @@ qt_add_executable(${PROJECT_NAME}
     ${PROJECT_SOURCES}
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE .)
+target_include_directories(${PROJECT_NAME} PRIVATE 
+    .
+    ./OpenGL)
 target_link_libraries(${PROJECT_NAME} PRIVATE 
         Qt::Core
         Qt::Gui
