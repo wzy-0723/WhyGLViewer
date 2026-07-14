@@ -13,7 +13,7 @@ struct QShaderInfo
 	QString strFragmentShaderPath;	
 };
 
-class OpenGLRenderer : public QOpenGLFunctions_4_5_Core
+class OpenGLRenderer
 {
 public:
 	OpenGLRenderer();
@@ -26,8 +26,13 @@ public:
 
 	void Draw(const std::vector<float32_t>& arrVertices,const std::vector<uint32_t>& arrIndices);
 
+	void InitTriangle();
+
 private:
 	QOpenGLVertexArrayObject m_VAO;
 	QOpenGLBuffer m_VBO, m_EBO;
 	QOpenGLShaderProgram m_shader;
+
+private:
+	GLuint m_uVao;
 };

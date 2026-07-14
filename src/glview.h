@@ -2,12 +2,14 @@
 #define GLVIEW_H
 
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions_4_5_Core>
+
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
 
 #include "opengl_renderer.h"
+#include "singleton.h"
+
 
 class GLView : public QOpenGLWidget
 {
@@ -27,5 +29,7 @@ private:
 
 signals:
 };
+
+
 
 #endif // GLVIEW_H

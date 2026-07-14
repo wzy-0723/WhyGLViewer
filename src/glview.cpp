@@ -1,4 +1,5 @@
 #include "glview.h"
+#include "OpenGLFunc.h"
 
 GLView::GLView(QWidget *parent)
     : QOpenGLWidget{parent}
@@ -12,6 +13,8 @@ GLView::~GLView()
 
 void GLView::initializeGL()
 {
+    SINGLETON_PTR(OpenGLFunc)->initializeOpenGLFunctions();
+
     m_pOpenGLRenderer = new OpenGLRenderer();
     m_pOpenGLRenderer->InitShader({ ":/shader/1.model_loading.vert" ,":/shader/1.model_loading.frag" });
 }
