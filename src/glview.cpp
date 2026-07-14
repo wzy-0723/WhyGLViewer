@@ -16,7 +16,7 @@ void GLView::initializeGL()
     SINGLETON_PTR(OpenGLFunc)->initializeOpenGLFunctions();
 
     m_pOpenGLRenderer = new OpenGLRenderer();
-    m_pOpenGLRenderer->InitShader({ ":/shader/1.model_loading.vert" ,":/shader/1.model_loading.frag" });
+    m_pOpenGLRenderer->InitShader({ ":/Shader/1.model_loading.vert" ,":/Shader/1.model_loading.frag" });
 }
 
 void GLView::resizeGL(int w, int h)
