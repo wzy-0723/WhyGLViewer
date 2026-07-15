@@ -33,14 +33,6 @@ namespace why
         return pShader;
     }
 
-    void GraphicsAPI::BindMaterial(Material* material)
-    {
-        if (material)
-        {
-            material->Bind();
-        }
-    }
-
     GLuint GraphicsAPI::CreateVertexBuffer(const std::vector<float>& vertices)
     {
         GLuint VBO = 0;
@@ -61,4 +53,45 @@ namespace why
         return EBO;
     }
 
+    void GraphicsAPI::SetClearColor(float r, float g, float b, float a)
+    {
+        OPENGLFUNC->glClearColor(r, g, b, a);
+    }
+
+    void GraphicsAPI::ClearBuffers()
+    {
+        OPENGLFUNC->glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    void GraphicsAPI::BindShaderProgram(QOpenGLShaderProgram* shaderProgram)
+    {
+        if (nullptr != shaderProgram)
+        {
+            shaderProgram->bind();
+        }
+    }
+
+    void GraphicsAPI::BindMaterial(Material* material)
+    {
+        if (nullptr != material)
+        {
+            material->Bind();
+        }
+    }
+
+    void GraphicsAPI::BindMesh(Mesh* mesh)
+    {
+        if (nullptr != mesh)
+        {
+            mesh->Bind();
+        }
+    }
+
+    void GraphicsAPI::DrawMesh(Mesh* mesh)
+    {
+        if (nullptr != mesh)
+        {
+            mesh->Draw();
+        }
+    }
 }

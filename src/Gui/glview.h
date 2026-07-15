@@ -10,6 +10,9 @@
 #include "OpenGLRenderer.h"
 #include "Singleton.h"
 #include "Material.h"
+#include "Mesh.h"
+
+#include "Application.h"
 
 class GLView : public QOpenGLWidget
 {
@@ -18,16 +21,20 @@ public:
     explicit GLView(QWidget *parent = nullptr);
     ~GLView();
 
+
 protected:
     virtual void initializeGL();
     virtual void resizeGL(int w, int h);
     virtual void paintGL();
 
+    virtual void event(QEvent e);
 private:
     Renderer* m_pOpenGLRenderer{ nullptr };
 
 
-    why::Material m_material;
+
+
+    std::unique_ptr<why::Application> m_pApplication;
 
 signals:
 };

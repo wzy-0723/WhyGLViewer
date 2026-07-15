@@ -1,9 +1,13 @@
 #include "glview.h"
 #include "OpenGLFunc.h"
 #include "GraphicsAPI.h"
+#include "Game.h"
+
 GLView::GLView(QWidget *parent)
     : QOpenGLWidget{parent}
-{}
+{
+    m_pApplication = std::make_unique<why::Game>();
+}
 
 GLView::~GLView()
 {
@@ -15,12 +19,7 @@ void GLView::initializeGL()
 {
     SINGLETON_PTR(OpenGLFunc)->initializeOpenGLFunctions();
 
-    m_pOpenGLRenderer = new Renderer();
-    m_pOpenGLRenderer->InitShader({ ":/Shader/1.model_loading.vert" ,":/Shader/1.model_loading.frag" });
-
-    auto shaderProgram = SINGLETON_PTR(why::GraphicsAPI)->CreateShaderProgram("1.model_loading");
-    m_material.SetShaderProgram(shaderProgram);
-
+    m_pApplication->Init();
 }
 
 void GLView::resizeGL(int w, int h)
@@ -30,15 +29,16 @@ void GLView::resizeGL(int w, int h)
 
 void GLView::paintGL()
 {
-    m_pOpenGLRenderer->ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    SINGLETON_PTR(why::GraphicsAPI)->SetClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    SINGLETON_PTR(why::GraphicsAPI)->ClearBuffers();
 
-    m_pOpenGLRenderer->Draw(
-        {
-        -0.5f, -0.5f, 0.0f, 0.f, 0.f, 1.f,
-        0.5f, -0.5f, 0.0f, 0.f, 0.f, 1.f,
-        0.0f,  0.5f, 0.0f, 0.f, 0.f, 1.f
-        },
-        { 0, 1, 2 }
-    );
+    // 先更新数据，再提交绘制
+    m_pApplication->Update(QEvent(QEvent::Type::None));
+    m_pApplication->GetRenderQueue().Draw();
+}
+
+void GLView::event(QEvent e)
+{
+    
 }
 

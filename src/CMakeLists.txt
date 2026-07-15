@@ -19,7 +19,6 @@ target_include_directories(${PROJECT_NAME}
 	    ./Util
 )
 
-
 target_link_libraries(${PROJECT_NAME} 
     PRIVATE 
         Qt::Core
