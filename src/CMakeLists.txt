@@ -3,6 +3,8 @@ file(GLOB_RECURSE source CONFIGURE_DEPENDS *.h *.cpp *.qrc *.ui)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets OpenGLWidgets Core Gui)
 
+find_package(glm CONFIG REQUIRED)
+
 set(PROJECT_SOURCES ${source})
 
 qt_add_executable(${PROJECT_NAME}
@@ -13,6 +15,7 @@ qt_add_executable(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} 
     PRIVATE 
         .
+		./Application
 		./Graphic
         ./Gui
 	    ./Render
@@ -25,7 +28,10 @@ target_link_libraries(${PROJECT_NAME}
         Qt::Gui
         Qt::Widgets 
         Qt::OpenGLWidgets
+
+        #glm
 )
+
 
 install(TARGETS ${PROJECT_NAME}
     BUNDLE  DESTINATION .

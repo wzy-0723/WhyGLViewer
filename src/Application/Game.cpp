@@ -44,7 +44,6 @@ namespace why
         m_mesh = std::make_unique<why::Mesh>(vertexLayout, vertices, indices);
 
         return true;
-
     }
 
     void Game::Update(const QEvent& e)
