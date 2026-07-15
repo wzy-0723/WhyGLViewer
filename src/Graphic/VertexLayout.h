@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <qopengl.h>
 
+
+
 namespace why
 {
     struct VertexElement
