@@ -5,22 +5,18 @@
 #include "GraphicsAPI.h"
 
 
-OpenGLRenderer::OpenGLRenderer()
-    : m_VBO(QOpenGLBuffer::VertexBuffer),
-    m_EBO(QOpenGLBuffer::IndexBuffer)
+Renderer::Renderer()
 {
 	//initializeOpenGLFunctions();
     InitTriangle();
 }
 
-OpenGLRenderer::~OpenGLRenderer()
+Renderer::~Renderer()
 {
-    m_VAO.destroy();
-    m_VBO.destroy();
-    m_EBO.destroy();
+
 }
 
-void OpenGLRenderer::InitTriangle()
+void Renderer::InitTriangle()
 {
     std::vector<float> vertices =
     {
@@ -65,23 +61,23 @@ void OpenGLRenderer::InitTriangle()
     SINGLETON_PTR(OpenGLFunc)->glBindVertexArray(0);
 }
 
-void OpenGLRenderer::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+void Renderer::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
 {
     SINGLETON_PTR(OpenGLFunc)->glViewport(x, y, width, height);
 }
 
-void OpenGLRenderer::ClearColor(const float32_t& fR, const float32_t& fG, const float32_t& fB, const float32_t& fA)
+void Renderer::ClearColor(const float32_t& fR, const float32_t& fG, const float32_t& fB, const float32_t& fA)
 {
 	SINGLETON_PTR(OpenGLFunc)->glClearColor((GLfloat)fR, (GLfloat)fG, (GLfloat)fB, (GLfloat)fA);
 	SINGLETON_PTR(OpenGLFunc)->glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void OpenGLRenderer::InitShader(const QShaderInfo& shaderInfo)
-{   
-    m_pShader = m_GraphicsAPI.CreateShaderProgram("1.model_loading");
+void Renderer::InitShader(const QShaderInfo& shaderInfo)
+{       
+    m_pShader = SINGLETON_PTR(why::GraphicsAPI)->CreateShaderProgram("1.model_loading");
 }
 
-void OpenGLRenderer::Draw(const std::vector<float32_t>& arrVertices, const std::vector<uint32_t>& arrIndices)
+void Renderer::Draw(const std::vector<float32_t>& arrVertices, const std::vector<uint32_t>& arrIndices)
 {
     m_pShader->bind();
 

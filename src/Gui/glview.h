@@ -9,7 +9,7 @@
 
 #include "OpenGLRenderer.h"
 #include "Singleton.h"
-
+#include "Material.h"
 
 class GLView : public QOpenGLWidget
 {
@@ -24,8 +24,10 @@ protected:
     virtual void paintGL();
 
 private:
-    OpenGLRenderer* m_pOpenGLRenderer{ nullptr };
+    Renderer* m_pOpenGLRenderer{ nullptr };
 
+
+    why::Material m_material;
 
 signals:
 };

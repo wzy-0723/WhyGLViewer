@@ -12,11 +12,13 @@ struct QShaderInfo
 	QString strFragmentShaderPath;	
 };
 
-class OpenGLRenderer
+class Renderer
 {
 public:
-	OpenGLRenderer();
-	~OpenGLRenderer();
+	Renderer();
+	~Renderer();
+
+public:
 
 	void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
 	void ClearColor(const float32_t& fR, const float32_t& fG, const float32_t& fB, const float32_t& fA);
@@ -28,11 +30,8 @@ public:
 	void InitTriangle();
 
 private:
-	QOpenGLVertexArrayObject m_VAO;
-	QOpenGLBuffer m_VBO, m_EBO;
-	//QOpenGLShaderProgram m_shader;
 	std::shared_ptr<QOpenGLShaderProgram> m_pShader;
-	why::GraphicsAPI m_GraphicsAPI;
+	//why::GraphicsAPI m_GraphicsAPI;
 private:
 	GLuint m_uVao;
 };

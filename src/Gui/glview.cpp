@@ -1,6 +1,6 @@
 #include "glview.h"
 #include "OpenGLFunc.h"
-
+#include "GraphicsAPI.h"
 GLView::GLView(QWidget *parent)
     : QOpenGLWidget{parent}
 {}
@@ -15,8 +15,12 @@ void GLView::initializeGL()
 {
     SINGLETON_PTR(OpenGLFunc)->initializeOpenGLFunctions();
 
-    m_pOpenGLRenderer = new OpenGLRenderer();
+    m_pOpenGLRenderer = new Renderer();
     m_pOpenGLRenderer->InitShader({ ":/Shader/1.model_loading.vert" ,":/Shader/1.model_loading.frag" });
+
+    auto shaderProgram = SINGLETON_PTR(why::GraphicsAPI)->CreateShaderProgram("1.model_loading");
+    m_material.SetShaderProgram(shaderProgram);
+
 }
 
 void GLView::resizeGL(int w, int h)
