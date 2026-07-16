@@ -16,7 +16,7 @@ class GLWindow : public QMainWindow
 public:
     explicit GLWindow(QWidget *parent = nullptr);
     ~GLWindow() override;
-
+    
 private:
     Ui::GLWindow *ui;
 };

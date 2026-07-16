@@ -6,7 +6,6 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets OpenGLWidgets Core Gui)
 
 
-
 set(PROJECT_SOURCES ${source})
 
 qt_add_executable(${PROJECT_NAME}
@@ -19,8 +18,10 @@ target_include_directories(${PROJECT_NAME}
         .
 		./Application
 		./Graphic
+        ./Input
         ./Gui
 	    ./Render
+        ./Scene
 	    ./Util
 )
 
