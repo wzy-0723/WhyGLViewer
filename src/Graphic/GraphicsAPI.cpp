@@ -6,6 +6,13 @@
 #include "OpenGLFunc.h"
 namespace why
 {
+    bool GraphicsAPI::Init()
+    {
+        // 保存像素的Z深度，因为屏幕实际显示2维信息，当重叠时开启深度测试才能正确显示当前视角下的像素颜色
+        OPENGLFUNC->glEnable(GL_DEPTH_TEST);
+        return true;
+    }
+
     std::shared_ptr<QOpenGLShaderProgram> GraphicsAPI::CreateShaderProgram(const std::string& strShaderName)
     {
         std::shared_ptr<QOpenGLShaderProgram> pShader = std::make_shared<QOpenGLShaderProgram>();
@@ -60,7 +67,7 @@ namespace why
 
     void GraphicsAPI::ClearBuffers()
     {
-        OPENGLFUNC->glClear(GL_COLOR_BUFFER_BIT);
+        OPENGLFUNC->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     void GraphicsAPI::BindShaderProgram(ShaderProgram* shaderProgram)

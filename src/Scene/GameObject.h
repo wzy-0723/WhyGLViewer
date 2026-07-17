@@ -5,7 +5,7 @@
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 #include "Component.h"
-
+#include <glm/gtc/quaternion.hpp>
 namespace why
 {
     class GameObject
@@ -42,8 +42,8 @@ namespace why
         const glm::vec3& GetPosition() const { return m_position; };
         void SetPosition(const glm::vec3& pos) { m_position = pos; };
 
-        const glm::vec3& GetRotation() const { return m_rotation; };
-        void SetRotation(const glm::vec3& rot) { m_rotation = rot; };
+        const glm::quat& GetRotation() const { return m_rotation; };
+        void SetRotation(const glm::quat& rot) { m_rotation = rot; };
 
         const glm::vec3& GetScale() const { return m_scale; };
         void SetScale(const glm::vec3& scale) { m_scale = scale; };
@@ -63,7 +63,7 @@ namespace why
 
         bool m_isAlive = true;
         glm::vec3 m_position = glm::vec3(0.0f);
-        glm::vec3 m_rotation = glm::vec3(0.0f);
+        glm::quat m_rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
         glm::vec3 m_scale = glm::vec3(1.0f);
 
         friend class Scene;

@@ -10,6 +10,7 @@ namespace why
 
     glm::mat4 CameraComponent::GetViewMatrix() const
     {
+        // 视图变化等于持有组件者的model反变化，相当于相机往右移动，视野往左移动
         return glm::inverse(m_owner->GetWorldTransform());
     }
 

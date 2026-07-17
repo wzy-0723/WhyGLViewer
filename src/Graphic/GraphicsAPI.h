@@ -12,6 +12,7 @@ namespace why
     {
     public:
         template<typename> friend class Singleton;
+        
         std::shared_ptr<QOpenGLShaderProgram> CreateShaderProgram(const std::string& strShaderName);
 
         GLuint CreateVertexBuffer(const std::vector<float>& vertices);
@@ -19,7 +20,7 @@ namespace why
 
         void SetClearColor(float r, float g, float b, float a);
         void ClearBuffers();
-
+        bool Init();
         
         void BindShaderProgram(ShaderProgram* shaderProgram);
         void BindMaterial(Material* material);

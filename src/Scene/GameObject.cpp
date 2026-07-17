@@ -48,6 +48,7 @@ namespace why
         m_isAlive = false;
     }
 
+    //@why:model模型矩阵变化
     glm::mat4 GameObject::GetLocalTransform() const
     {
         glm::mat4 mat = glm::mat4(1.0f);
@@ -56,9 +57,7 @@ namespace why
         mat = glm::translate(mat, m_position);
 
         // Rotation         x、y、z是弧度值
-        mat = glm::rotate(mat, m_rotation.x, glm::vec3(1.0f, 0.0f, 0.0f)); // X-axis
-        mat = glm::rotate(mat, m_rotation.y, glm::vec3(0.0f, 1.0f, 0.0f)); // Y-axis
-        mat = glm::rotate(mat, m_rotation.z, glm::vec3(0.0f, 0.0f, 1.0f)); // Z-axis
+        mat = mat * glm::mat4_cast(m_rotation);
 
         // Scale
         mat = glm::scale(mat, m_scale);

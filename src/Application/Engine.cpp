@@ -26,6 +26,8 @@ namespace why
 			return false;
 		}
 
+		SINGLETON_PTR(GraphicsAPI)->Init();
+
 		m_pApplication = std::make_unique<Game>();
 		m_pInputManager = std::make_unique<why::InputManager>();
 		m_pRederQueue = std::make_unique<why::RenderQueue>();		
@@ -59,8 +61,8 @@ namespace why
 				// logic for matrices
 				auto cameraComponent = cameraObject->GetComponent<CameraComponent>();
 				if (cameraComponent)
-				{
-					cameraData.viewMatrix = cameraComponent->GetViewMatrix();
+				{					
+					cameraData.viewMatrix = cameraComponent->GetViewMatrix();//@why:相机变化
 					cameraData.projectionMatrix = cameraComponent->GetProjectionMatrix(aspect);
 				}
 			}
