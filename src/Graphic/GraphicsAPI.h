@@ -5,7 +5,7 @@
 #include "Singleton.h"
 #include "Material.h"
 #include "Mesh.h"
-
+#include "ShaderProgram.h"
 namespace why
 {
     class GraphicsAPI
@@ -20,7 +20,8 @@ namespace why
         void SetClearColor(float r, float g, float b, float a);
         void ClearBuffers();
 
-        void BindShaderProgram(QOpenGLShaderProgram* shaderProgram);
+        
+        void BindShaderProgram(ShaderProgram* shaderProgram);
         void BindMaterial(Material* material);
         void BindMesh(Mesh* mesh);
         void DrawMesh(Mesh* mesh);

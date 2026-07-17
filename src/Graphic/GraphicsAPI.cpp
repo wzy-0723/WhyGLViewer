@@ -63,11 +63,11 @@ namespace why
         OPENGLFUNC->glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    void GraphicsAPI::BindShaderProgram(QOpenGLShaderProgram* shaderProgram)
+    void GraphicsAPI::BindShaderProgram(ShaderProgram* shaderProgram)
     {
         if (nullptr != shaderProgram)
         {
-            shaderProgram->bind();
+            shaderProgram->Bind();
         }
     }
 

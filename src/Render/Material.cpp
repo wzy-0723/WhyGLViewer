@@ -5,7 +5,7 @@ namespace why
 {
 	void Material::SetShaderProgram(const std::shared_ptr<QOpenGLShaderProgram>& shaderProgram)
 	{
-		m_shaderProgram = shaderProgram;
+		m_pShaderProgram.reset(new ShaderProgram(shaderProgram));
 	}
 
 	void Material::SetParam(const std::string& name, float value)
@@ -20,24 +20,23 @@ namespace why
 
 	void Material::Bind()
 	{
-		if (!m_shaderProgram)
+		if (!m_pShaderProgram)
 		{
 			return;
 		}
 
-		m_shaderProgram->bind();
+		m_pShaderProgram->Bind();
 
 		for (auto& param : m_floatParams)
 		{
-			m_shaderProgram->setUniformValue(param.first.c_str(), param.second);
+			m_pShaderProgram->SetUniform(param.first.c_str(), param.second);
 		}
 
-
-		GLuint id =m_shaderProgram->programId();
 		for (auto& param : m_float2Params)
 		{
-			auto loc = OPENGLFUNC->glGetUniformLocation(id, param.first.c_str());
-			OPENGLFUNC->glUniform2f(loc, param.second.first, param.second.second);
+			//auto loc = OPENGLFUNC->glGetUniformLocation(id, param.first.c_str());
+			//OPENGLFUNC->glUniform2f(loc, param.second.first, param.second.second);
+			m_pShaderProgram->SetUniform(param.first.c_str(), param.second.first, param.second.second);
 		}
 	}
 }

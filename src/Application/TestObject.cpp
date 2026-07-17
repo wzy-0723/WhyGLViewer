@@ -3,10 +3,12 @@
 #include "GraphicsAPI.h"
 #include "Engine.h"
 #include <qevent.h>
+#include "MeshComponent.h"
 TestObject::TestObject()
 {
     auto shaderProgram = SINGLETON_PTR(why::GraphicsAPI)->CreateShaderProgram("1.model_loading");
-    m_material.SetShaderProgram(shaderProgram);
+    auto material = std::make_shared<why::Material>();
+    material->SetShaderProgram(shaderProgram);
 
     std::vector<float> vertices =
     {
@@ -40,39 +42,34 @@ TestObject::TestObject()
         });
     vertexLayout.stride = sizeof(float) * 6;
 
-    m_mesh = std::make_shared<why::Mesh>(vertexLayout, vertices, indices);
+    auto mesh = std::make_shared<why::Mesh>(vertexLayout, vertices, indices);
+    AddComponent(new why::MeshComponent(material, mesh));
 }
 
 void TestObject::Update(float deltaTime)
 {
     why::GameObject::Update(deltaTime);
 
-    auto input = SINGLETON_PTR(why::Engine)->GetInputManager();
+    //auto input = SINGLETON_PTR(why::Engine)->GetInputManager();
 
-    // Horizontal movement
-    if (input->IsKeyPressed(Qt::Key_A))
-    {
-        m_offsetX -= 0.001f;
-    }
-    else if (input->IsKeyPressed(Qt::Key_D))
-    {
-        m_offsetX += 0.001f;
-    }
-    // Vertical movement
-    if (input->IsKeyPressed(Qt::Key_W))
-    {
-        m_offsetY += 0.001f;
-    }
-    else if (input->IsKeyPressed(Qt::Key_S))
-    {
-        m_offsetY -= 0.001f;
-    }
-
-    m_material.SetParam("uOffset", m_offsetX, m_offsetY);
-
-    why::RenderCommand command;
-    command.material = &m_material;
-    command.mesh = m_mesh.get();
-
-    SINGLETON_PTR(why::Engine)->GetRenderQueue()->Submit(command);
+    //auto position = GetPosition();
+    //// Horizontal movement
+    //if (input->IsKeyPressed(Qt::Key_A))
+    //{
+    //    position.x -= 0.001f;
+    //}
+    //else if (input->IsKeyPressed(Qt::Key_D))
+    //{
+    //    position.x += 0.001f;
+    //}
+    //// Vertical movement
+    //if (input->IsKeyPressed(Qt::Key_W))
+    //{
+    //    position.y += 0.001f;
+    //}
+    //else if (input->IsKeyPressed(Qt::Key_S))
+    //{
+    //    position.y -= 0.001f;
+    //}
+    //SetPosition(position);
 }

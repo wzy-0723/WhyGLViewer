@@ -63,4 +63,16 @@ namespace why
 	* @return 返回路径对象
 	*/
 	std::string PathToUTF8(const std::filesystem::path& filePath);
+
+	/**
+* @brief 创建目录
+* @param dir 待创建得目录名称
+* @return
+* @ - 0 创建成功
+* @ - 其他 创建失败
+* @warning
+* 在windows平台上，使用GB2312编码
+* 在非windwos平台上，使用UTF-8编码
+*/
+	bool CreateDirectories(const std::string& dir);
 }

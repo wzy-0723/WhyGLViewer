@@ -36,10 +36,13 @@ namespace why
         bool result = false;
         auto currentParent = obj->GetParent();
 
+        // 要将父节点置为空的情况，也就是需要添加到m_objects
         if (parent == nullptr)
         {
+            // 将有父节点的子节点变成无父节点的根节点，需要添加到m_objects
             if (currentParent != nullptr)
             {
+                // 在父节点的子节点集合中定位当前对象
                 auto it = std::find_if(
                     currentParent->m_children.begin(),
                     currentParent->m_children.end(),
@@ -48,6 +51,7 @@ namespace why
                     }
                 );
 
+                // 如果定位到，从父结点中移除这个obj位置，将obj添加到当前场景？
                 if (it != currentParent->m_children.end())
                 {
                     m_objects.push_back(std::move(*it));
@@ -56,9 +60,7 @@ namespace why
                     result = true;
                 }
             }
-            // No parent currently. This can be in 2 cases
-            // 1. The object is in the scene root
-            // 2. The object has been just created
+            // 刚创建的无父节点的节点，或者已有的无父结点的节点
             else
             {
                 auto it = std::find_if(
@@ -77,9 +79,10 @@ namespace why
                 }
             }
         }
-        // We are trying to add it as a child of another object
+        // 要给节点添加父节点的情况
         else
         {
+            // 已有父节点
             if (currentParent != nullptr)
             {
                 auto it = std::find_if(
@@ -103,7 +106,7 @@ namespace why
                         }
                         currentElement = currentElement->GetParent();
                     }
-
+                    // 防止祖父节点中有自身的情况
                     if (!found)
                     {
                         parent->m_children.push_back(std::move(*it));
@@ -127,6 +130,7 @@ namespace why
                 );
 
                 // The object has been hust created
+                // 在根节点m_objects中
                 if (it == m_objects.end())
                 {
                     std::unique_ptr<GameObject> objHolder(obj);
@@ -136,6 +140,8 @@ namespace why
                 }
                 else
                 {
+                    // 在根节点m_objects中
+                    // 移除出m_objects，变为节点的子节点
                     bool found = false;
                     auto currentElement = parent;
                     while (currentElement)
@@ -160,5 +166,15 @@ namespace why
         }
 
         return result;
+    }
+
+    void Scene::SetMainCamera(GameObject* camera)
+    {
+        m_mainCamera = camera;
+    }
+
+    GameObject* Scene::GetMainCamera()
+    {
+        return m_mainCamera;
     }
 }

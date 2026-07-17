@@ -2,11 +2,16 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
+#include "Component.h"
 
 namespace why
 {
     class GameObject
     {
+    private:
+
     public:
         virtual ~GameObject() = default;
         virtual void Update(float deltaTime);
@@ -16,6 +21,36 @@ namespace why
         bool IsAlive() const;
         void MarkForDestroy();
 
+        void AddComponent(Component* component);
+        template<typename T, typename = typename std::enable_if_t<std::is_base_of_v<Component, T>>>
+        T* GetComponent()
+        {
+            size_t typeId = Component::StaticTypeId<T>();
+
+            for (auto& component : m_components)
+            {
+                if (component->GetTypeId() == typeId)
+                {
+                    return static_cast<T*>(component.get());
+                }
+            }
+
+            return nullptr;
+        }
+
+
+        const glm::vec3& GetPosition() const { return m_position; };
+        void SetPosition(const glm::vec3& pos) { m_position = pos; };
+
+        const glm::vec3& GetRotation() const { return m_rotation; };
+        void SetRotation(const glm::vec3& rot) { m_rotation = rot; };
+
+        const glm::vec3& GetScale() const { return m_scale; };
+        void SetScale(const glm::vec3& scale) { m_scale = scale; };
+
+        glm::mat4 GetLocalTransform() const;
+        glm::mat4 GetWorldTransform() const;
+
     protected:
         GameObject() = default;
 
@@ -23,7 +58,13 @@ namespace why
         std::string m_name;
         GameObject* m_parent = nullptr;
         std::vector<std::unique_ptr<GameObject>> m_children;
+        std::vector<std::unique_ptr<Component>> m_components;
+
+
         bool m_isAlive = true;
+        glm::vec3 m_position = glm::vec3(0.0f);
+        glm::vec3 m_rotation = glm::vec3(0.0f);
+        glm::vec3 m_scale = glm::vec3(1.0f);
 
         friend class Scene;
     };

@@ -2,7 +2,7 @@
 #include <QOpenGLShaderProgram>
 #include <unordered_map>
 #include <iostream>
-
+#include "ShaderProgram.h"
 namespace why
 {
     class Material
@@ -14,8 +14,9 @@ namespace why
 
         void Bind();
 
+        ShaderProgram* GetShaderProgram() { return m_pShaderProgram.get(); };
     private:
-        std::shared_ptr<QOpenGLShaderProgram> m_shaderProgram;
+        std::shared_ptr<ShaderProgram> m_pShaderProgram;
         std::unordered_map<std::string, float> m_floatParams;
         std::unordered_map<std::string, std::pair<float, float>> m_float2Params;
     };

@@ -12,6 +12,19 @@
 #endif
 namespace why
 {
+	bool CreateDirectories(const std::string& dir)
+	{
+		std::filesystem::path			dirPath = UTF8ToPath(dir);
+		std::error_code					errorCode;
+
+		if (std::filesystem::create_directories(dirPath, errorCode) || errorCode.value() == 0)
+			return true;
+
+
+		//LOG_INFO << "CreateDirectories failed! errorCode:" << errorCode.value();
+		return false;
+	}
+
 	std::string AppendBuildPath(const std::string& path)
 	{		
 		const std::string& res = SINGLETON_PTR(PathAppender)->SetSourcePath(GetExecutableDirectory()).

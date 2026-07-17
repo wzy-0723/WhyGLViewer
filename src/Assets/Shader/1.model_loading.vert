@@ -4,10 +4,12 @@ layout (location = 1) in vec3 color;
 
 out vec3 vColor;
 
-uniform vec2 uOffset;
+uniform mat4 uModel;
+uniform mat4 uView;
+uniform mat4 uProjection;
 
 void main()
 {
-    vColor = color;
-    gl_Position = vec4(position.x + uOffset.x, position.y + uOffset.y, position.z, 1.0);
+	vColor = color;
+	gl_Position = uProjection * uView * uModel * vec4(position, 1.0);
 }

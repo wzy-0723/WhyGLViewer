@@ -1,9 +1,12 @@
 file(GLOB_RECURSE source CONFIGURE_DEPENDS *.h *.cpp *.qrc *.ui)
 
 find_package(glm CONFIG REQUIRED)
+find_package(glog CONFIG REQUIRED)
+
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets OpenGLWidgets Core Gui)
+
 
 
 set(PROJECT_SOURCES ${source})
@@ -13,10 +16,15 @@ qt_add_executable(${PROJECT_NAME}
     ${PROJECT_SOURCES}
 )
 
+if(MSVC)
+    add_compile_options(/EHsc)
+endif()
+
 target_include_directories(${PROJECT_NAME} 
     PRIVATE 
         .
 		./Application
+        ./Component
 		./Graphic
         ./Input
         ./Gui
@@ -33,6 +41,7 @@ target_link_libraries(${PROJECT_NAME}
         Qt::OpenGLWidgets
 
         glm::glm
+        glog::glog
 )
 
 install(TARGETS ${PROJECT_NAME}
