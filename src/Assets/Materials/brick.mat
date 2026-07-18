@@ -1,0 +1,17 @@
+{
+	"shader": 
+	{
+		"vertex": "Shaders/vertex.glsl",
+		"fragment": "Shaders/fragment.glsl"
+	},
+	"params":
+	{
+		"textures":
+		[
+			{
+				"name": "brickTexture",
+				"path": "Textures/brick.png"
+			}
+		]
+	}
+}

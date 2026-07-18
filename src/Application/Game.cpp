@@ -8,10 +8,7 @@
 #include "MeshComponent.h"
 #include "Logger.h"
 bool Game::Init()
-{    
-    auto& fs = SINGLETON_PTR(why::Engine)->GetFileSystem();
-    auto texture = why::Texture::Load("brick.png");
-
+{
     auto camera = m_scene.CreateObject("Camera");
     camera->AddComponent(new why::CameraComponent());
     camera->SetPosition(glm::vec3(0.0f, 0.0f, 2.0f));
@@ -20,14 +17,7 @@ bool Game::Init()
 
     m_scene.CreateObject<TestObject>("TestObject");
 
-    std::string vertexShaderSource = fs.LoadAssetFileText("Shaders/vertex.glsl");
-    std::string fragmentShaderSource = fs.LoadAssetFileText("Shaders/fragment.glsl");
-
-    auto shaderProgram = SINGLETON_PTR(why::GraphicsAPI)->CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
-
-    auto material = std::make_shared<why::Material>();
-    material->SetShaderProgram(shaderProgram);
-    material->SetParam("brickTexture", texture);
+    auto material = why::Material::Load("materials/brick.mat");
 
     std::vector<float> vertices =
     {

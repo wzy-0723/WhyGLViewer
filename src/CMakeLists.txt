@@ -3,6 +3,7 @@ file(GLOB_RECURSE source CONFIGURE_DEPENDS *.h *.cpp *.qrc *.ui)
 find_package(glm CONFIG REQUIRED)
 find_package(glog CONFIG REQUIRED)
 find_package(stb REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets OpenGLWidgets Core Gui)
@@ -51,6 +52,7 @@ target_link_libraries(${PROJECT_NAME}
 
         glm::glm
         glog::glog
+        nlohmann_json::nlohmann_json
 )
 
 install(TARGETS ${PROJECT_NAME}
