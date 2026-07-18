@@ -13,7 +13,10 @@ namespace why
     public:
         template<typename> friend class Singleton;
         
-        std::shared_ptr<QOpenGLShaderProgram> CreateShaderProgram(const std::string& strShaderName);
+        std::shared_ptr<ShaderProgram> CreateShaderProgram(const std::string& vertexSource,
+            const std::string& fragmentSource);
+
+        //std::shared_ptr<QOpenGLShaderProgram> CreateShaderProgram(const std::string& strShaderName);
 
         GLuint CreateVertexBuffer(const std::vector<float>& vertices);
         GLuint CreateIndexBuffer(const std::vector<uint32_t>& indices);

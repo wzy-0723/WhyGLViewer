@@ -3,9 +3,9 @@
 
 namespace why
 {
-	void Material::SetShaderProgram(const std::shared_ptr<QOpenGLShaderProgram>& shaderProgram)
+	void Material::SetShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram)
 	{
-		m_pShaderProgram.reset(new ShaderProgram(shaderProgram));
+		m_pShaderProgram = shaderProgram;
 	}
 
 	void Material::SetParam(const std::string& name, float value)
@@ -16,6 +16,11 @@ namespace why
 	void Material::SetParam(const std::string& name, float v0, float v1)
 	{
 		m_float2Params[name] = { v0, v1 };
+	}
+
+	void Material::SetParam(const std::string& name, const std::shared_ptr<Texture>& texture)
+	{
+		m_textures[name] = texture;
 	}
 
 	void Material::Bind()
@@ -34,9 +39,12 @@ namespace why
 
 		for (auto& param : m_float2Params)
 		{
-			//auto loc = OPENGLFUNC->glGetUniformLocation(id, param.first.c_str());
-			//OPENGLFUNC->glUniform2f(loc, param.second.first, param.second.second);
 			m_pShaderProgram->SetUniform(param.first.c_str(), param.second.first, param.second.second);
+		}
+
+		for (auto& param : m_textures)
+		{
+			m_pShaderProgram->SetTexture(param.first, param.second.get());
 		}
 	}
 }

@@ -22,8 +22,8 @@ namespace why
             float deltaX = currentPos.x - oldPos.x;
             float deltaY = currentPos.y - oldPos.y;
 
-            LOG_INFO << "oldPos:("      << oldPos.x     << "," << oldPos.y      << ")";
-            LOG_INFO << "currentPos:("  << currentPos.x << "," << currentPos.y  << ")";
+            //LOG_INFO << "oldPos:("      << oldPos.x     << "," << oldPos.y      << ")";
+            //LOG_INFO << "currentPos:("  << currentPos.x << "," << currentPos.y  << ")";
 
             // rot around Y axis
             float yAngle = -deltaX * m_sensitivity * deltaTime;

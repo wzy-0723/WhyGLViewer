@@ -6,7 +6,37 @@
 #include "MeshComponent.h"
 TestObject::TestObject()
 {
-    auto shaderProgram = SINGLETON_PTR(why::GraphicsAPI)->CreateShaderProgram("1.model_loading");
+    std::string vertexShaderSource = R"(
+        #version 330 core
+        layout (location = 0) in vec3 position;
+        layout (location = 1) in vec3 color;
+
+        out vec3 vColor;
+
+        uniform mat4 uModel;
+        uniform mat4 uView;
+        uniform mat4 uProjection;
+
+        void main()
+        {
+            vColor = color;
+            gl_Position = uProjection * uView * uModel * vec4(position, 1.0);
+        }
+    )";
+
+    std::string fragmentShaderSource = R"(
+        #version 330 core
+        out vec4 FragColor;
+
+        in vec3 vColor;
+
+        void main()
+        {
+            FragColor = vec4(vColor, 1.0);
+        }
+    )";
+
+    auto shaderProgram = SINGLETON_PTR(why::GraphicsAPI)->CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
     auto material = std::make_shared<why::Material>();
     material->SetShaderProgram(shaderProgram);
 
@@ -65,8 +95,6 @@ TestObject::TestObject()
 
     auto mesh = std::make_shared<why::Mesh>(vertexLayout, vertices, indices);
     AddComponent(new why::MeshComponent(material, mesh));
-
-
 }
 
 void TestObject::Update(float deltaTime)

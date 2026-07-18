@@ -2,7 +2,7 @@
 
 #include "standard.h"
 
-#define GLOG_NO_ABBREVIATED_SEVERITIES
+//#define GLOG_NO_ABBREVIATED_SEVERITIES
 #pragma warning(push)
 #pragma warning(disable:4251 4244 4996)
 #include <glog/logging.h>

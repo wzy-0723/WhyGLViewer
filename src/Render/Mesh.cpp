@@ -11,23 +11,24 @@ namespace why
         m_VBO = SINGLETON_PTR(GraphicsAPI)->CreateVertexBuffer(vertices);
         m_EBO = SINGLETON_PTR(GraphicsAPI)->CreateIndexBuffer(indices);
 
-        OPENGLFUNC->glGenVertexArrays(1, &m_VAO);
-        OPENGLFUNC->glBindVertexArray(m_VAO);
+        
+        GLCall(glGenVertexArrays(1, &m_VAO));
+        GLCall(glBindVertexArray(m_VAO));
 
-        OPENGLFUNC->glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_VBO));
 
         for (auto& element : m_vertexLayout.elements)
         {
-            OPENGLFUNC->glVertexAttribPointer(element.index, element.size, element.type, GL_FALSE,
-                m_vertexLayout.stride, (void*)(uintptr_t)element.offset);
-            OPENGLFUNC->glEnableVertexAttribArray(element.index);
+            GLCall(glVertexAttribPointer(element.index, element.size, element.type, GL_FALSE,
+                m_vertexLayout.stride, (void*)(uintptr_t)element.offset));
+            GLCall(glEnableVertexAttribArray(element.index));
         }
 
-        OPENGLFUNC->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+        GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO));
 
-        OPENGLFUNC->glBindVertexArray(0);
-        OPENGLFUNC->glBindBuffer(GL_ARRAY_BUFFER, 0);
-        OPENGLFUNC->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        GLCall(glBindVertexArray(0));
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+        GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 
         m_vertexCout = (vertices.size() * sizeof(float)) / m_vertexLayout.stride;
         m_indexCount = indices.size();
@@ -39,38 +40,39 @@ namespace why
 
         m_VBO = SINGLETON_PTR(GraphicsAPI)->CreateVertexBuffer(vertices);
 
-        OPENGLFUNC->glGenVertexArrays(1, &m_VAO);
-        OPENGLFUNC->glBindVertexArray(m_VAO);
+        GLCall(glGenVertexArrays(1, &m_VAO));
+        GLCall(glBindVertexArray(m_VAO));
 
-        OPENGLFUNC->glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_VBO));
 
         for (auto& element : m_vertexLayout.elements)
         {
-            OPENGLFUNC->glVertexAttribPointer(element.index, element.size, element.type, GL_FALSE,
-                m_vertexLayout.stride, (void*)(uintptr_t)element.offset);
-            OPENGLFUNC->glEnableVertexAttribArray(element.index);
+            GLCall(glVertexAttribPointer(element.index, element.size, element.type, GL_FALSE,
+                m_vertexLayout.stride, (void*)(uintptr_t)element.offset));
+            GLCall(glEnableVertexAttribArray(element.index));
         }
 
-        OPENGLFUNC->glBindVertexArray(0);
-        OPENGLFUNC->glBindBuffer(GL_ARRAY_BUFFER, 0);
+        GLCall(glBindVertexArray(0));
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 
         m_vertexCout = (vertices.size() * sizeof(float)) / m_vertexLayout.stride;
     }
 
     void Mesh::Bind()
     {
-        OPENGLFUNC->glBindVertexArray(m_VAO);
+        GLCall(glBindVertexArray(m_VAO));
     }
 
     void Mesh::Draw()
     {
         if (m_indexCount > 0)
         {
-            OPENGLFUNC->glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_INT, 0);
+            //GL_FLOAT GL_UNSIGNED_INT
+            GLCall(glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_INT, 0));
         }
         else
         {
-            OPENGLFUNC->glDrawArrays(GL_TRIANGLES, 0, m_vertexCout);
+            GLCall(glDrawArrays(GL_TRIANGLES, 0, m_vertexCout));
         }
     }
 }

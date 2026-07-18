@@ -13,32 +13,84 @@ namespace why
         return true;
     }
 
-    std::shared_ptr<QOpenGLShaderProgram> GraphicsAPI::CreateShaderProgram(const std::string& strShaderName)
+    std::shared_ptr<ShaderProgram> GraphicsAPI::CreateShaderProgram(const std::string& vertexSource, const std::string& fragmentSource)
     {
-        std::shared_ptr<QOpenGLShaderProgram> pShader = std::make_shared<QOpenGLShaderProgram>();
-
-        SINGLETON_PTR(PathAppender)->SetSourcePath(":/Shader");
-        std::string strVertexShaderPath = SINGLETON_PTR(PathAppender)->AppendChildPath(strShaderName + ".vert").GetPath();
         
-        SINGLETON_PTR(PathAppender)->SetSourcePath(":/Shader");
-        std::string strFragmentShaderPath = SINGLETON_PTR(PathAppender)->AppendChildPath(strShaderName + ".frag").GetPath();
+        GLuint vertexShader = OPENGLFUNC->glCreateShader(GL_VERTEX_SHADER);
+        const char* vertexShaderCStr = vertexSource.c_str();
+        GLCall(glShaderSource(vertexShader, 1, &vertexShaderCStr, nullptr));
+        GLCall(glCompileShader(vertexShader));
 
-        bool result = true;
-        result = pShader->addShaderFromSourceFile(QOpenGLShader::Vertex, QString::fromStdString(strVertexShaderPath));
-        if (!result) {
-            qDebug() << pShader->log();
+        GLint success;
+        GLCall(glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success));
+        if (!success)
+        {
+            char infoLog[512];
+            GLCall(glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog));
+            LOG_ERROR << "ERROR:VERTEX_SHADER_COMPILATION_FAILED: " << infoLog << std::endl;
+            return nullptr;
         }
-        result = pShader->addShaderFromSourceFile(QOpenGLShader::Fragment, QString::fromStdString(strFragmentShaderPath));
-        if (!result) {
-            qDebug() << pShader->log();
+        
+        GLuint fragmentShader = OPENGLFUNC->glCreateShader(GL_FRAGMENT_SHADER);
+        const char* fragmentShaderSourceCStr = fragmentSource.c_str();
+        GLCall(glShaderSource(fragmentShader, 1, &fragmentShaderSourceCStr, nullptr));
+        GLCall(glCompileShader(fragmentShader));
+
+        GLCall(glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success));
+        if (!success)
+        {
+            char infoLog[512];
+            GLCall(glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog));
+            LOG_ERROR << "ERROR:FRAGMENT_SHADER_COMPILATION_FAILED: " << infoLog << std::endl;
+            return nullptr;
         }
-        result = pShader->link();
-        if (!result) {
-            qDebug() << pShader->log();
+        
+        GLuint shaderProgramID = OPENGLFUNC->glCreateProgram();
+        GLCall(glAttachShader(shaderProgramID, vertexShader));
+        GLCall(glAttachShader(shaderProgramID, fragmentShader));
+        GLCall(glLinkProgram(shaderProgramID));
+
+        GLCall(glGetProgramiv(shaderProgramID, GL_LINK_STATUS, &success));
+        if (!success)
+        {
+            char infoLog[512];
+            GLCall(glGetProgramInfoLog(shaderProgramID, 512, nullptr, infoLog));
+            LOG_ERROR << "ERROR:SHADER_PROGRAM_LINKING_FAILED: " << infoLog << std::endl;
+            return nullptr;
         }
 
-        return pShader;
+        GLCall(glDeleteShader(vertexShader));
+        GLCall(glDeleteShader(fragmentShader));
+
+        return std::make_shared<ShaderProgram>(shaderProgramID);
     }
+
+    //std::shared_ptr<QOpenGLShaderProgram> GraphicsAPI::CreateShaderProgram(const std::string& strShaderName)
+    //{
+    //    std::shared_ptr<QOpenGLShaderProgram> pShader = std::make_shared<QOpenGLShaderProgram>();
+
+    //    SINGLETON_PTR(PathAppender)->SetSourcePath(":/Shader");
+    //    std::string strVertexShaderPath = SINGLETON_PTR(PathAppender)->AppendChildPath(strShaderName + ".vert").GetPath();
+    //    
+    //    SINGLETON_PTR(PathAppender)->SetSourcePath(":/Shader");
+    //    std::string strFragmentShaderPath = SINGLETON_PTR(PathAppender)->AppendChildPath(strShaderName + ".frag").GetPath();
+
+    //    bool result = true;
+    //    result = pShader->addShaderFromSourceFile(QOpenGLShader::Vertex, QString::fromStdString(strVertexShaderPath));
+    //    if (!result) {
+    //        qDebug() << pShader->log();
+    //    }
+    //    result = pShader->addShaderFromSourceFile(QOpenGLShader::Fragment, QString::fromStdString(strFragmentShaderPath));
+    //    if (!result) {
+    //        qDebug() << pShader->log();
+    //    }
+    //    result = pShader->link();
+    //    if (!result) {
+    //        qDebug() << pShader->log();
+    //    }
+
+    //    return pShader;
+    //}
 
     GLuint GraphicsAPI::CreateVertexBuffer(const std::vector<float>& vertices)
     {
