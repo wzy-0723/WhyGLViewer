@@ -1,5 +1,5 @@
 #include "Scene.h"
-
+#include "LightComponent.h"
 namespace why
 {
     void Scene::Update(float deltaTime)
@@ -176,5 +176,31 @@ namespace why
     GameObject* Scene::GetMainCamera()
     {
         return m_mainCamera;
+    }
+
+    std::vector<LightData> Scene::CollectLights()
+    {
+        std::vector<LightData> lights;
+        for (auto& obj : m_objects)
+        {
+            CollectLightsRecursive(obj.get(), lights);
+        }
+        return lights;
+    }
+
+    void Scene::CollectLightsRecursive(GameObject* obj, std::vector<LightData>& out)
+    {
+        if (auto light = obj->GetComponent<LightComponent>())
+        {
+            LightData data;
+            data.color = light->GetColor();
+            data.position = obj->GetWorldPosition();
+            out.push_back(data);
+        }
+
+        for (auto& child : obj->m_children)
+        {
+            CollectLightsRecursive(child.get(), out);
+        }
     }
 }

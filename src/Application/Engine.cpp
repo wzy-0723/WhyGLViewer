@@ -6,6 +6,8 @@
 #include "OpenGLFunc.h"
 #include "Logger.h"
 #include "FileUtil.h"
+#include "Common.h"
+
 namespace why
 {
 	namespace
@@ -48,6 +50,8 @@ namespace why
 		m_pApplication->Update(deltaTime);
 
 		CameraData cameraData;
+		std::vector<LightData> lights;
+
 		int width = 0;
 		int height = 0;
 		GLint viewport[4];
@@ -66,9 +70,10 @@ namespace why
 					cameraData.projectionMatrix = cameraComponent->GetProjectionMatrix(aspect);
 				}
 			}
+			lights = m_pCurrentScene->CollectLights();
 		}
 
-		m_pRederQueue->Draw(cameraData);
+		m_pRederQueue->Draw(cameraData, lights);
 	}
 
 	void Engine::Destroy()

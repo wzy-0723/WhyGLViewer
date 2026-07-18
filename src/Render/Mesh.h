@@ -1,6 +1,7 @@
 #pragma once
 #include "VertexLayout.h"
-
+#include <memory>
+#include <iostream>
 namespace why
 {
     class Mesh
@@ -13,6 +14,8 @@ namespace why
 
         void Bind();
         void Draw();
+        static std::shared_ptr<Mesh> CreateCube();
+        static std::shared_ptr<Mesh> Load(const std::string& path);
 
     private:
         VertexLayout m_vertexLayout;

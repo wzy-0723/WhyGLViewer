@@ -40,6 +40,7 @@ namespace why
 
 
         const glm::vec3& GetPosition() const { return m_position; };
+        glm::vec3 GetWorldPosition() const;
         void SetPosition(const glm::vec3& pos) { m_position = pos; };
 
         const glm::quat& GetRotation() const { return m_rotation; };

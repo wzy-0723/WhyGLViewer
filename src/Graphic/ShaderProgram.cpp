@@ -57,6 +57,12 @@ namespace why
         GLCall(glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat)));
     }
 
+    void ShaderProgram::SetUniform(const std::string& name, const glm::vec3& value)
+    {
+        auto location = GetUniformLocation(name);
+        GLCall(glUniform3fv(location, 1, glm::value_ptr(value)));
+    }
+
     void ShaderProgram::SetTexture(const std::string& name, Texture* texture)
     {
         auto location = GetUniformLocation(name);

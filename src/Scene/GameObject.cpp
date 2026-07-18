@@ -48,6 +48,12 @@ namespace why
         m_isAlive = false;
     }
 
+    glm::vec3 GameObject::GetWorldPosition() const
+    {
+        glm::vec4 hom = GetWorldTransform() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+        return glm::vec3(hom) / hom.w;
+    }
+
     //@why:model模型矩阵变化
     glm::mat4 GameObject::GetLocalTransform() const
     {

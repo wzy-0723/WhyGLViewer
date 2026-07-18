@@ -3,7 +3,7 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "GraphicsAPI.h"
-
+#include "Common.h"
 namespace why
 {
 
@@ -14,17 +14,11 @@ namespace why
         glm::mat4 modelMatrix;
     };
 
-    struct CameraData
-    {
-        glm::mat4 viewMatrix;
-        glm::mat4 projectionMatrix;
-    };
-
     class RenderQueue
     {
     public:
         void Submit(const RenderCommand& command);
-        void Draw(const CameraData& cameraData);
+        void Draw(const CameraData& cameraData, const std::vector<LightData>& lights);
 
     private:
         std::vector<RenderCommand> m_commands;

@@ -1,13 +1,31 @@
-#version 330 core
+#version 450 core
+struct Light
+{
+    vec3 color;
+    vec3 position;
+};
+
+uniform Light uLight;
+
 out vec4 FragColor;
 
-in vec3 vColor;
 in vec2 vUV;
+in vec3 vNormal;
+in vec3 vFragPos;
 
-uniform sampler2D brickTexture;
+uniform sampler2D baseColorTexture;
 
 void main()
 {
-    vec4 texColor = texture(brickTexture, vUV);
-    FragColor = texColor * vec4(vColor, 1.0);
+    vec3 norm = normalize(vNormal);
+
+    vec3 lightDir = normalize(uLight.position - vFragPos);
+
+    float diff = max(dot(norm, lightDir), 0.0);
+
+    vec3 diffuse = diff * uLight.color;
+
+    vec4 texColor = texture(baseColorTexture, vUV);
+
+    FragColor = texColor * vec4(diffuse, 1.0);
 }
