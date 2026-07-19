@@ -65,32 +65,74 @@ namespace why
         return std::make_shared<ShaderProgram>(shaderProgramID);
     }
 
-    //std::shared_ptr<QOpenGLShaderProgram> GraphicsAPI::CreateShaderProgram(const std::string& strShaderName)
-    //{
-    //    std::shared_ptr<QOpenGLShaderProgram> pShader = std::make_shared<QOpenGLShaderProgram>();
+    const std::shared_ptr<ShaderProgram>& GraphicsAPI::GetDefaultShaderProgram()
+    {
+        if (!m_defaultShaderProgram)
+        {
+            std::string vertexShaderSource = R"(
+            #version 330 core
+            layout (location = 0) in vec3 position;
+            layout (location = 1) in vec3 color;
+            layout (location = 2) in vec2 uv;
+            layout (location = 3) in vec3 normal;
+        
+            out vec2 vUV;
+            out vec3 vNormal;
+            out vec3 vFragPos;
+        
+            uniform mat4 uModel;
+            uniform mat4 uView;
+            uniform mat4 uProjection;
+        
+            void main()
+            {
+                vUV = uv;
+                vNormal = normalize(transpose(inverse(mat3(uModel))) * normal);
+                vFragPos = vec3(uModel * vec4(position, 1.0));
+                gl_Position = uProjection * uView * uModel * vec4(position, 1.0);
+            }
+            )";
 
-    //    SINGLETON_PTR(PathAppender)->SetSourcePath(":/Shader");
-    //    std::string strVertexShaderPath = SINGLETON_PTR(PathAppender)->AppendChildPath(strShaderName + ".vert").GetPath();
-    //    
-    //    SINGLETON_PTR(PathAppender)->SetSourcePath(":/Shader");
-    //    std::string strFragmentShaderPath = SINGLETON_PTR(PathAppender)->AppendChildPath(strShaderName + ".frag").GetPath();
+            std::string fragmentShaderSource = R"(
+            #version 330 core
 
-    //    bool result = true;
-    //    result = pShader->addShaderFromSourceFile(QOpenGLShader::Vertex, QString::fromStdString(strVertexShaderPath));
-    //    if (!result) {
-    //        qDebug() << pShader->log();
-    //    }
-    //    result = pShader->addShaderFromSourceFile(QOpenGLShader::Fragment, QString::fromStdString(strFragmentShaderPath));
-    //    if (!result) {
-    //        qDebug() << pShader->log();
-    //    }
-    //    result = pShader->link();
-    //    if (!result) {
-    //        qDebug() << pShader->log();
-    //    }
+            struct Light
+            {
+                vec3 color;
+                vec3 position;
+            };
 
-    //    return pShader;
-    //}
+            uniform Light uLight;
+
+            out vec4 FragColor;
+
+            in vec2 vUV;
+            in vec3 vNormal;
+            in vec3 vFragPos;
+
+            uniform sampler2D baseColorTexture;
+
+            void main()
+            {
+                vec3 norm = normalize(vNormal);
+
+                vec3 lightDir = normalize(uLight.position - vFragPos);
+
+                float diff = max(dot(norm, lightDir), 0.0);
+
+                vec3 diffuse = diff * uLight.color;
+
+                vec4 texColor = texture(baseColorTexture, vUV);
+
+                FragColor = texColor * vec4(diffuse, 1.0);
+            }
+            )";
+
+            m_defaultShaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
+        }
+
+        return m_defaultShaderProgram;
+    }
 
     GLuint GraphicsAPI::CreateVertexBuffer(const std::vector<float>& vertices)
     {

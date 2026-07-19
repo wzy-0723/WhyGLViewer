@@ -29,7 +29,17 @@ namespace why
         GLCall(glGenTextures(1, &m_textureID));
         GLCall(glBindTexture(GL_TEXTURE_2D, m_textureID));
 
-        GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data));
+        // 兼容RGB和RGBA
+        GLint internalFormat = GL_RGB;
+        GLenum format = GL_RGB;
+
+        if (numChannels == 4)
+        {
+            internalFormat = GL_RGBA;
+            format = GL_RGBA;
+        }
+
+        GLCall(glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data));
 
         GLCall(glGenerateMipmap(GL_TEXTURE_2D));
 

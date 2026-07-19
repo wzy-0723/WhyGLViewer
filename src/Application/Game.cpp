@@ -11,6 +11,8 @@
 
 bool Game::Init()
 {
+    SINGLETON_PTR(why::Engine)->SetScene(&m_scene);
+
     auto camera = m_scene.CreateObject("Camera");
     camera->AddComponent(new why::CameraComponent());
     camera->SetPosition(glm::vec3(0.0f, 0.0f, 2.0f));
@@ -23,10 +25,6 @@ bool Game::Init()
 
     auto mesh = why::Mesh::CreateCube();
 
-    auto objectA = m_scene.CreateObject("ObjectA");
-    objectA->AddComponent(new why::MeshComponent(material, mesh));
-    objectA->SetPosition(glm::vec3(1.0f, 0.0f, -5.0f));
-
     auto objectB = m_scene.CreateObject("ObjectB");
     objectB->AddComponent(new why::MeshComponent(material, mesh));
     objectB->SetPosition(glm::vec3(0.0f, 2.0f, 2.0f));
@@ -38,12 +36,13 @@ bool Game::Init()
     objectC->SetRotation(glm::vec3(1.0f, 0.0f, 1.0f));
     objectC->SetScale(glm::vec3(1.5f, 1.5f, 1.5f));
 
-    auto suzanneMesh = why::Mesh::Load("models/Suzanne.gltf");
-    auto suzanneMaterial = why::Material::Load("materials/suzanne.mat");
+    auto suzanneObject = why::GameObject::LoadGLTF("Models/suzanne/Suzanne.gltf");
+    suzanneObject->SetPosition(glm::vec3(0.0f, 0.0f, -5.0f));
 
-    auto suzanneObj = m_scene.CreateObject("Suzanne");
-    suzanneObj->AddComponent(new why::MeshComponent(suzanneMaterial, suzanneMesh));
-    suzanneObj->SetPosition(glm::vec3(0.0f, 0.0f, -5.0f));
+    auto gun = why::GameObject::LoadGLTF("Models/sten_gunmachine_carbine/scene.gltf");
+    gun->SetParent(camera);
+    gun->SetPosition(glm::vec3(0.75f, -0.5f, -0.75f));
+    gun->SetScale(glm::vec3(-1.0f, 1.0f, 1.0f));
 
     auto light = m_scene.CreateObject("Light");
     auto lightComp = new why::LightComponent();
@@ -51,7 +50,7 @@ bool Game::Init()
     light->AddComponent(lightComp);
     light->SetPosition(glm::vec3(0.0f, 5.0f, 0.0f));
 
-    SINGLETON_PTR(why::Engine)->SetScene(&m_scene);
+    
     return true;
 }
 

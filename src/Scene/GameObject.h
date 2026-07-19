@@ -8,6 +8,8 @@
 #include <glm/gtc/quaternion.hpp>
 namespace why
 {
+    class Scene;
+
     class GameObject
     {
     private:
@@ -18,6 +20,7 @@ namespace why
         const std::string& GetName() const;
         void SetName(const std::string& name);
         GameObject* GetParent();
+        bool SetParent(GameObject* parent);       
         bool IsAlive() const;
         void MarkForDestroy();
 
@@ -36,7 +39,8 @@ namespace why
             }
 
             return nullptr;
-        }
+        };
+        Scene* GetScene() { return  m_scene; };
 
 
         const glm::vec3& GetPosition() const { return m_position; };
@@ -52,12 +56,16 @@ namespace why
         glm::mat4 GetLocalTransform() const;
         glm::mat4 GetWorldTransform() const;
 
+        // 相当于把材质和顶点数据加载放在一起，关注ParseGLTFNode函数
+        static GameObject* LoadGLTF(const std::string& path);
+
     protected:
         GameObject() = default;
 
     private:
         std::string m_name;
         GameObject* m_parent = nullptr;
+        Scene* m_scene = nullptr;
         std::vector<std::unique_ptr<GameObject>> m_children;
         std::vector<std::unique_ptr<Component>> m_components;
 

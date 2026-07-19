@@ -16,6 +16,8 @@ namespace why
         std::shared_ptr<ShaderProgram> CreateShaderProgram(const std::string& vertexSource,
             const std::string& fragmentSource);
 
+        const std::shared_ptr<ShaderProgram>& GetDefaultShaderProgram();
+
         //std::shared_ptr<QOpenGLShaderProgram> CreateShaderProgram(const std::string& strShaderName);
 
         GLuint CreateVertexBuffer(const std::vector<float>& vertices);
@@ -32,5 +34,7 @@ namespace why
 
     private:
         GraphicsAPI() {};
+    private:
+        std::shared_ptr<ShaderProgram> m_defaultShaderProgram;
     };
 }
