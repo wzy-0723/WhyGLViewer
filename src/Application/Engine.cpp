@@ -68,6 +68,7 @@ namespace why
 				{					
 					cameraData.viewMatrix = cameraComponent->GetViewMatrix();//@why:相机变化
 					cameraData.projectionMatrix = cameraComponent->GetProjectionMatrix(aspect);
+					cameraData.position = cameraObject->GetWorldPosition();
 				}
 			}
 			lights = m_pCurrentScene->CollectLights();
