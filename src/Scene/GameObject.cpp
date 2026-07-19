@@ -293,7 +293,7 @@ namespace why
                             if (texture->image->uri)
                             {
                                 auto path = folder / std::string(texture->image->uri);
-                                auto tex = Texture::Load(path.string());
+                                auto tex = SINGLETON_PTR(Engine)->GetTextureManager().GetOrLoadTexture(path.string());
                                 mat->SetParam("baseColorTexture", tex);
                             }
                         }
@@ -307,7 +307,7 @@ namespace why
                             if (texture->image->uri)
                             {
                                 auto path = folder / std::string(texture->image->uri);
-                                auto tex = Texture::Load(path.string());
+                                auto tex = SINGLETON_PTR(Engine)->GetTextureManager().GetOrLoadTexture(path.string());
                                 mat->SetParam("baseColorTexture", tex);
                             }
                         }

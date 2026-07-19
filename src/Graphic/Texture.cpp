@@ -93,4 +93,17 @@ namespace why
 
         return result;
     }
+
+    std::shared_ptr<Texture> TextureManager::GetOrLoadTexture(const std::string& path)
+    {
+        auto it = m_textures.find(path);
+        if (it != m_textures.end())
+        {
+            return it->second;
+        }
+
+        auto texture = Texture::Load(path);
+        m_textures[path] = texture;
+        return texture;
+    }
 }
