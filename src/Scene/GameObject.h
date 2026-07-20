@@ -40,8 +40,14 @@ namespace why
 
             return nullptr;
         };
+        GameObject* FindChildByName(const std::string& name);
+
+
         Scene* GetScene() { return  m_scene; };
 
+
+        void SetActive(bool active) { m_active = active; };
+        bool IsActive() { return m_active; };
 
         const glm::vec3& GetPosition() const { return m_position; };
         glm::vec3 GetWorldPosition() const;
@@ -74,6 +80,7 @@ namespace why
         glm::vec3 m_position = glm::vec3(0.0f);
         glm::quat m_rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
         glm::vec3 m_scale = glm::vec3(1.0f);
+        bool m_active = true;
 
         friend class Scene;
     };
