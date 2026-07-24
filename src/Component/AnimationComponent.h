@@ -56,7 +56,7 @@ namespace why
         void SetClip(AnimationClip* clip);
         void RegisterClip(const std::string& name, const std::shared_ptr<AnimationClip>& clip);
         void Play(const std::string& name, bool loop = true);
-
+        bool IsPlaying() const { return m_isPlaying; };
     private:
         // 一个m_bindings只能对应一个动画，因此SetClip中要BuildBindings
         void BuildBindings();

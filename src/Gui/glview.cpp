@@ -10,6 +10,7 @@ GLView::GLView(QWidget *parent)
 {
     // 点击窗口即可获取键盘焦点
     this->setFocusPolicy(Qt::ClickFocus);
+    this->setCursor(Qt::BlankCursor);
 }
 
 GLView::~GLView()

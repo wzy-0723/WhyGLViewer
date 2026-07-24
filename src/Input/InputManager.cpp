@@ -40,6 +40,9 @@ namespace why
             //SetMousePositionOld(GetMousePositionCurrent());
             //glm::vec2 currentPos(static_cast<float>(mouseMoveEv->pos().x()), static_cast<float>(mouseMoveEv->pos().y()));            
             //SetMousePositionCurrent(currentPos);
+
+
+
         }
 
 
@@ -91,7 +94,17 @@ namespace why
 
     const glm::vec2& InputManager::GetMousePositionCurrent() const
     {
-        return m_mousePositionCurrent;
+        return m_mousePositionCurrent;    
+    }
+
+    void InputManager::SetMousePositionChanged(bool changed)
+    {
+        m_mousePositionChanged = changed;
+    }
+
+    bool InputManager::IsMousePositionChanged() const
+    {
+        return m_mousePositionChanged;
     }
 
 }

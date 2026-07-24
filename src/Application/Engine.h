@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include "FileSystem.h"
 #include "Texture.h"
+#include "PhysicsManager.h"
+
 namespace why
 {
     class Engine
@@ -21,6 +23,7 @@ namespace why
         RenderQueue* GetRenderQueue() { return m_pRederQueue.get(); };
         FileSystem& GetFileSystem() { return m_fileSystem; };
         TextureManager& GetTextureManager() { return m_textureManager; };
+        PhysicsManager& GetPhysicsManager() { return m_physicsManager; };
 
         void SetScene(Scene* scene) { m_pCurrentScene.reset(scene); };
         Scene* GetScene() { return m_pCurrentScene.get(); };
@@ -40,5 +43,6 @@ namespace why
 
         FileSystem m_fileSystem;
         TextureManager m_textureManager;
+        PhysicsManager m_physicsManager;
     };
 }

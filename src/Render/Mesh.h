@@ -2,6 +2,7 @@
 #include "VertexLayout.h"
 #include <memory>
 #include <iostream>
+#include <glm/vec3.hpp>
 namespace why
 {
     class Mesh
@@ -14,8 +15,8 @@ namespace why
 
         void Bind();
         void Draw();
-        static std::shared_ptr<Mesh> CreateCube();
-        static std::shared_ptr<Mesh> Load(const std::string& path);
+        static std::shared_ptr<Mesh> CreateBox(const glm::vec3& extents = glm::vec3(1.0f));
+        //static std::shared_ptr<Mesh> Load(const std::string& path);
 
     private:
         VertexLayout m_vertexLayout;

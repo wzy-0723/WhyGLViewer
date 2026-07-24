@@ -9,22 +9,21 @@
 #include "Logger.h"
 #include "LightComponent.h"
 #include "AnimationComponent.h"
-
+#include "PhysicsComponent.h"
+#include "Player.h"
 bool Game::Init()
 {
     SINGLETON_PTR(why::Engine)->SetScene(&m_scene);
 
-    auto camera = m_scene.CreateObject("Camera");
-    camera->AddComponent(new why::CameraComponent());
-    camera->SetPosition(glm::vec3(0.0f, 0.0f, 2.0f));
-    camera->AddComponent(new why::PlayerControllerComponent());
-    m_scene.SetMainCamera(camera);
+    auto player = m_scene.CreateObject<Player>("Player");
+    player->Init();
+    m_scene.SetMainCamera(player);
 
     m_scene.CreateObject<TestObject>("TestObject");
 
     auto material = why::Material::Load("materials/brick.mat");
 
-    auto mesh = why::Mesh::CreateCube();
+    auto mesh = why::Mesh::CreateBox();
 
     auto objectB = m_scene.CreateObject("ObjectB");
     objectB->AddComponent(new why::MeshComponent(material, mesh));
@@ -40,33 +39,32 @@ bool Game::Init()
     auto suzanneObject = why::GameObject::LoadGLTF("Models/suzanne/Suzanne.gltf");
     suzanneObject->SetPosition(glm::vec3(0.0f, 0.0f, -5.0f));
 
-    auto gun = why::GameObject::LoadGLTF("Models/sten_gunmachine_carbine/scene.gltf");
-    gun->SetParent(camera);
-    gun->SetPosition(glm::vec3(0.75f, -0.5f, -0.75f));
-    gun->SetScale(glm::vec3(-1.0f, 1.0f, 1.0f));
-
-    if (auto anim = gun->GetComponent<why::AnimationComponent>())
-    {
-        if (auto bullet = gun->FindChildByName("bullet_33"))
-        {
-            bullet->SetActive(false);
-        }
-
-        if (auto fire = gun->FindChildByName("BOOM_35"))
-        {
-            fire->SetActive(false);
-        }
-
-        anim->Play("shoot", false);
-        //anim->Play("shoot"); ²¥·Å
-    }
-
     auto light = m_scene.CreateObject("Light");
     auto lightComp = new why::LightComponent();
     lightComp->SetColor(glm::vec3(1.0f));
     light->AddComponent(lightComp);
     light->SetPosition(glm::vec3(0.0f, 5.0f, 0.0f));
 
+    auto ground = m_scene.CreateObject("Ground");
+    ground->SetPosition(glm::vec3(0.0f, -5.0f, 0.0f));
+
+    glm::vec3 groundExtents(20.0f, 2.0f, 20.0f);
+    auto groundMesh = why::Mesh::CreateBox(groundExtents);
+    ground->AddComponent(new why::MeshComponent(material, groundMesh));
+
+    auto groundCollider = std::make_shared<why::BoxCollider>(groundExtents);
+    auto groundBody = std::make_shared<why::RigidBody>(
+        why::BodyType::Static, groundCollider, 0.0f, 0.5f);
+    ground->AddComponent(new why::PhysicsComponent(groundBody));
+
+    auto boxObj = m_scene.CreateObject("FallingBox");
+    boxObj->AddComponent(new why::MeshComponent(material, mesh));
+    boxObj->SetPosition(glm::vec3(0.0f, 2.0f, 2.0f));
+    boxObj->SetRotation(glm::quat(glm::vec3(1.0f, 2.0f, 0.0f)));
+    auto boxCollider = std::make_shared<why::BoxCollider>(glm::vec3(1.0f));
+    auto boxBody = std::make_shared<why::RigidBody>(
+        why::BodyType::Dynamic, boxCollider, 5.0f, 0.5f);
+    boxObj->AddComponent(new why::PhysicsComponent(boxBody));
     
     return true;
 }

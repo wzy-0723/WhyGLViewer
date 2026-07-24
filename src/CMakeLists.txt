@@ -2,6 +2,7 @@ file(GLOB_RECURSE source CONFIGURE_DEPENDS *.h *.cpp *.qrc *.ui)
 
 find_package(glm CONFIG REQUIRED)
 find_package(glog CONFIG REQUIRED)
+find_package(Bullet CONFIG REQUIRED)
 find_package(stb REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_path(CGLTF_INCLUDE_DIRS "cgltf.h")
@@ -37,6 +38,7 @@ target_include_directories(${PROJECT_NAME}
         ./Input
         ./Gui
         ./IO
+        ./Physics
 	    ./Render
         ./Scene
 	    ./Util
@@ -56,6 +58,7 @@ target_link_libraries(${PROJECT_NAME}
         glm::glm
         glog::glog
         nlohmann_json::nlohmann_json
+        ${BULLET_LIBRARIES}
 )
 
 install(TARGETS ${PROJECT_NAME}

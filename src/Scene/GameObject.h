@@ -68,7 +68,7 @@ namespace why
     protected:
         GameObject() = default;
 
-    private:
+    protected:
         std::string m_name;
         GameObject* m_parent = nullptr;
         Scene* m_scene = nullptr;

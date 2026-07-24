@@ -8,13 +8,18 @@
 
 namespace why
 {
+    void PlayerControllerComponent::Init()
+    {
+        m_kinematicController = std::make_unique<KinematicCharacterController>(0.4f, 1.2f);
+    }   
+
     void PlayerControllerComponent::Update(float deltaTime)
     {        
         auto inputManager = SINGLETON_PTR(Engine)->GetInputManager();
         auto rotation = m_owner->GetRotation();
 
         
-        if (inputManager->IsMouseButtonPressed(Qt::MouseButton::LeftButton))
+        //if (inputManager->IsMouseButtonPressed(Qt::MouseButton::LeftButton))
         {
             const auto& oldPos = inputManager->GetMousePositionOld();
             const auto& currentPos = inputManager->GetMousePositionCurrent();
@@ -22,20 +27,27 @@ namespace why
             float deltaX = currentPos.x - oldPos.x;
             float deltaY = currentPos.y - oldPos.y;
 
-            //LOG_INFO << "oldPos:("      << oldPos.x     << "," << oldPos.y      << ")";
-            //LOG_INFO << "currentPos:("  << currentPos.x << "," << currentPos.y  << ")";
+            if (deltaX > 200 || deltaY > 200)
+            {
+                deltaX = 0;
+                deltaY = 0;
+            }
+
+            LOG_INFO << "oldPos:("      << oldPos.x     << "," << oldPos.y      << ")";
+            LOG_INFO << "currentPos:("  << currentPos.x << "," << currentPos.y  << ")";
 
             // rot around Y axis
-            float yAngle = -deltaX * m_sensitivity * deltaTime;
-            glm::quat yRot = glm::angleAxis(yAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+            float yDeltaAngle = -deltaX * m_sensitivity * deltaTime;
+            m_yRot += yDeltaAngle;
+            glm::quat yRot = glm::angleAxis(glm::radians(m_yRot), glm::vec3(0.0f, 1.0f, 0.0f));
 
             // rot around X axis
-            float xAngle = -deltaY * m_sensitivity * deltaTime;
-            glm::vec3 right = rotation * glm::vec3(1.0f, 0.0f, 0.0f);
-            glm::quat xRot = glm::angleAxis(xAngle, right);
+            float xDeltaAngle = -deltaY * m_sensitivity * deltaTime;
+            m_xRot += xDeltaAngle;
+            m_xRot = std::clamp(m_xRot, -89.0f, 89.0f);
+            glm::quat xRot = glm::angleAxis(glm::radians(m_xRot), glm::vec3(1.0f, 0.0f, 0.0f));
 
-            glm::quat deltaRot = yRot * xRot;
-            rotation = glm::normalize(deltaRot * rotation);
+            rotation = glm::normalize(yRot * xRot);
 
             m_owner->SetRotation(rotation);
         }
@@ -50,27 +62,38 @@ namespace why
         glm::vec3 right = rotation * glm::vec3(1.0f, 0.0f, 0.0f);
 
 
-        auto position = m_owner->GetPosition();
+        glm::vec3 move(0.0f);
 
         // Left/Right movement
         // 以相机视角移动
         if (inputManager->IsKeyPressed(Qt::Key_A))
         {
-            position -= right * m_moveSpeed * deltaTime;
+            move -= right;
         }
         else if (inputManager->IsKeyPressed(Qt::Key_D))
         {
-            position += right * m_moveSpeed * deltaTime;
+            move += right;
         }
         // Vertical movement
         if (inputManager->IsKeyPressed(Qt::Key_W))
         {
-            position += front * m_moveSpeed * deltaTime;
+            move += front;
         }
         else if (inputManager->IsKeyPressed(Qt::Key_S))
         {
-            position -= front * m_moveSpeed * deltaTime;
+            move -= front;
         }
-        m_owner->SetPosition(position);
+        if (inputManager->IsKeyPressed(Qt::Key_Space))
+        {
+            m_kinematicController->Jump(glm::vec3(0.0f, 5.0f, 0.0f));
+        }
+
+        if (glm::dot(move, move) > 0)
+        {
+            move = glm::normalize(move);
+        }
+        m_kinematicController->Walk(move * m_moveSpeed * deltaTime);
+
+        m_owner->SetPosition(m_kinematicController->GetPosition());
     }
 }

@@ -29,7 +29,7 @@ namespace why
 		}
 
 		SINGLETON_PTR(GraphicsAPI)->Init();
-
+		m_physicsManager.Init();
 		m_pApplication = std::make_unique<Game>();
 		m_pInputManager = std::make_unique<why::InputManager>();
 		m_pRederQueue = std::make_unique<why::RenderQueue>();		
@@ -46,6 +46,7 @@ namespace why
 		float deltaTime = std::chrono::duration<float>(now - m_lastTimePoint).count();
 		m_lastTimePoint = now;
 
+		m_physicsManager.Update(deltaTime);
 		// 先更新数据，再提交绘制
 		m_pApplication->Update(deltaTime);
 
