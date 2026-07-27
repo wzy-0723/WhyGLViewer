@@ -7,7 +7,7 @@
 
 namespace why
 {
-    KinematicCharacterController::KinematicCharacterController(float raduis, float height)
+    KinematicCharacterController::KinematicCharacterController(float raduis, float height, const glm::vec3& position)
         : m_radius(raduis), m_height(height)
     {
         
@@ -19,9 +19,10 @@ namespace why
         // 创建带碰撞对缓存的幽灵对象
         m_ghost = std::make_unique<btPairCachingGhostObject>();
         btTransform start;      
-        start.setIdentity();                                    // 初始化变换矩阵为单位矩阵（无位移无旋转）
-        start.setOrigin(btVector3(0.0f, 2.0f, 0.0f));           // 设置初始生成世界坐标
-        m_ghost->setWorldTransform(start);                      // 给幽灵体赋予初始位姿
+        start.setIdentity();                                            // 初始化变换矩阵为单位矩阵（无位移无旋转）
+        //start.setOrigin(btVector3(0.0f, 2.0f, 0.0f));           
+        start.setOrigin(btVector3(position.x, position.y, position.z)); // 设置初始生成世界坐标
+        m_ghost->setWorldTransform(start);                              // 给幽灵体赋予初始位姿
         m_ghost->setCollisionShape(capsule);
         //CF_CHARACTER_OBJECT：碰撞标记，告知 Bullet 该物体是玩家角色，物理求解时使用角色专属碰撞规则。
         m_ghost->setCollisionFlags(m_ghost->getCollisionFlags() | btCollisionObject::CF_CHARACTER_OBJECT);

@@ -17,6 +17,8 @@ namespace why
 
     public:
         virtual ~GameObject() = default;
+        virtual void Init();
+        virtual void LoadProperties(const nlohmann::json& json);
         virtual void Update(float deltaTime);
         const std::string& GetName() const;
         void SetName(const std::string& name);
@@ -67,6 +69,7 @@ namespace why
         // 相当于把材质和顶点数据加载放在一起，关注ParseGLTFNode函数
         static GameObject* LoadGLTF(const std::string& path);
 
+        static GameObject* LoadGLTF(const std::string& path, Scene* scene);
     protected:
         GameObject() = default;
 
@@ -86,4 +89,55 @@ namespace why
 
         friend class Scene;
     };
+
+    class ObjectCreatorBase
+    {
+    public:
+        virtual ~ObjectCreatorBase() = default;
+        virtual GameObject* CreateGameObject() = 0;
+    };
+
+    template<typename T>
+    class ObjectCreator : public ObjectCreatorBase
+    {
+    public:
+        virtual GameObject* CreateGameObject() override
+        {
+            return new T();
+        }
+    };
+
+    class GameObjectFactory
+    {
+    public:
+        static GameObjectFactory& GetInstance()
+        {
+            static GameObjectFactory instance;
+            return instance;
+        }
+
+        template<typename T>
+        void RegisterObject(const std::string& name)
+        {
+            m_creators.emplace(name, std::make_unique<ObjectCreator<T>>());
+        }
+
+        GameObject* CreateGameObject(const std::string& typeName)
+        {
+            auto it = m_creators.find(typeName);
+            if (it == m_creators.end())
+            {
+                return nullptr;
+            }
+
+            return it->second->CreateGameObject();
+        }
+
+    private:
+        std::unordered_map<std::string, std::unique_ptr<ObjectCreatorBase>> m_creators;
+    };
+
+#define GAMEOBJECT(ObjectClass) \
+public: \
+    static void Register() { why::GameObjectFactory::GetInstance().RegisterObject<ObjectClass>(std::string(#ObjectClass)); }
 }

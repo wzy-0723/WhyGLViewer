@@ -14,6 +14,7 @@ namespace why
         void Clear();
 
         GameObject* CreateObject(const std::string& name, GameObject* parent = nullptr);
+        GameObject* CreateObject(const std::string& type, const std::string& name, GameObject* parent = nullptr);
 
         template<typename T, typename = typename std::enable_if_t<std::is_base_of_v<GameObject, T>>>
         T* CreateObject(const std::string& name, GameObject* parent = nullptr)
@@ -33,6 +34,7 @@ namespace why
         std::vector<LightData> CollectLights();
 
         static std::shared_ptr<Scene> Load(const std::string& path);
+
     private:
         void CollectLightsRecursive(GameObject* obj, std::vector<LightData>& out);
         void LoadObject(const nlohmann::json& jsonObject, GameObject* parent);

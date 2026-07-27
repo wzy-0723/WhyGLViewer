@@ -17,6 +17,14 @@
 
 namespace why
 {
+    void GameObject::Init()
+    {
+    }
+
+    void GameObject::LoadProperties(const nlohmann::json& json)
+    {
+    }
+
     void GameObject::SetWorldPosition(const glm::vec3& pos)
     {
         if (m_parent)
@@ -424,7 +432,7 @@ namespace why
         };
 
     GameObject* GameObject::LoadGLTF(const std::string& path)
-    {        
+    {       
         //1.加载json
         auto contents = SINGLETON_PTR(Engine)->GetFileSystem().LoadAssetFileText(path);
         if (contents.empty())
@@ -456,6 +464,156 @@ namespace why
         auto resultObject = SINGLETON_PTR(Engine)->GetScene()->CreateObject("Result");
         auto scene = &data->scenes[0];
         
+        for (cgltf_size i = 0; i < scene->nodes_count; ++i)
+        {
+            auto node = scene->nodes[i];
+            ParseGLTFNode(node, resultObject, relativeFolderPath);
+        }
+
+        // 动画加载
+        std::vector<std::shared_ptr<AnimationClip>> clips;
+        for (cgltf_size ai = 0; ai < data->animations_count; ++ai)
+        {
+            auto& anim = data->animations[ai];
+
+            auto clip = std::make_shared<AnimationClip>();
+            clip->name = anim.name ? anim.name : "noname";
+            clip->duration = 0.0f;
+
+            std::unordered_map<cgltf_node*, size_t> trackIndexOf;
+
+            auto GetOrCreateTrack = [&](cgltf_node* node) -> TransformTrack&
+                {
+                    auto it = trackIndexOf.find(node);
+                    if (it != trackIndexOf.end())
+                    {
+                        return clip->tracks[it->second];
+                    }
+
+                    TransformTrack track;
+                    track.targetName = node->name;
+                    clip->tracks.push_back(track);
+                    size_t idx = clip->tracks.size() - 1;
+                    trackIndexOf[node] = idx;
+                    return clip->tracks[idx];//其实返回的就是这个新建的track
+                };
+
+            for (cgltf_size ci = 0; ci < anim.channels_count; ++ci)
+            {
+                auto& channel = anim.channels[ci];
+                auto sampler = channel.sampler;
+
+                if (!channel.target_node || !sampler || !sampler->input || !sampler->output)
+                {
+                    continue;
+                }
+
+                std::vector<float> times;
+                ReadTimes(sampler->input, times);
+
+                auto& track = GetOrCreateTrack(channel.target_node);
+
+                switch (channel.target_path)
+                {
+                case cgltf_animation_path_type_translation:
+                {
+                    std::vector<glm::vec3> values;
+                    ReadOutputVec3(sampler->output, values);
+                    track.positions.resize(times.size());
+                    for (size_t i = 0; i < times.size(); ++i)
+                    {
+                        track.positions[i].time = times[i];
+                        track.positions[i].value = values[i];
+                    }
+                }
+                break;
+                case cgltf_animation_path_type_rotation:
+                {
+                    std::vector<glm::quat> values;
+                    ReadOutputQuat(sampler->output, values);
+                    track.rotations.resize(times.size());
+                    for (size_t i = 0; i < times.size(); ++i)
+                    {
+                        track.rotations[i].time = times[i];
+                        track.rotations[i].value = values[i];
+                    }
+                }
+                break;
+                case cgltf_animation_path_type_scale:
+                {
+                    std::vector<glm::vec3> values;
+                    ReadOutputVec3(sampler->output, values);
+                    track.scales.resize(times.size());
+                    for (size_t i = 0; i < times.size(); ++i)
+                    {
+                        track.scales[i].time = times[i];
+                        track.scales[i].value = values[i];
+                    }
+                }
+                break;
+                default:
+                    break;
+                }
+
+                clip->duration = std::max(clip->duration, times.back());
+            }
+
+            clips.push_back(std::move(clip));
+        }
+
+        if (!clips.empty())
+        {
+            auto animComp = new AnimationComponent();
+            resultObject->AddComponent(animComp);
+            for (auto& clip : clips)
+            {
+                animComp->RegisterClip(clip->name, clip);
+            }
+        }
+
+        cgltf_free(data);
+
+        return resultObject;
+    }
+
+    GameObject* GameObject::LoadGLTF(const std::string& path,  Scene* gameScene)
+    {
+        //1.加载json
+        auto contents = SINGLETON_PTR(Engine)->GetFileSystem().LoadAssetFileText(path);
+        if (contents.empty())
+        {
+            return nullptr;
+        }
+
+        if (!gameScene)
+        {
+            return nullptr;
+        }
+
+        cgltf_options options = {};
+        cgltf_data* data = nullptr;
+
+        //2.初始化 cgltf 并内存解析 gltf 数据
+        cgltf_result res = cgltf_parse(&options, contents.data(), contents.size(), &data);
+        if (res != cgltf_result_success)
+        {
+            return nullptr;
+        }
+
+        auto fullPath = SINGLETON_PTR(Engine)->GetFileSystem().GetAssetsFolder() / path;
+        auto fullFolderPath = fullPath.remove_filename();
+        auto relativeFolderPath = std::filesystem::path(path).remove_filename();
+        //3.加载外部二进制 Buffer
+        res = cgltf_load_buffers(&options, data, fullFolderPath.string().c_str());
+        if (res != cgltf_result_success)
+        {
+            cgltf_free(data);
+            return nullptr;
+        }
+        //4.准备 Mesh 结果对象，遍历 glTF 内所有 Mesh
+        auto resultObject = gameScene->CreateObject("Result");
+        auto scene = &data->scenes[0];
+
         for (cgltf_size i = 0; i < scene->nodes_count; ++i)
         {
             auto node = scene->nodes[i];
