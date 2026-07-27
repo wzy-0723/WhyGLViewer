@@ -6,6 +6,7 @@
 #include <glm/mat4x4.hpp>
 #include "Component.h"
 #include <glm/gtc/quaternion.hpp>
+
 namespace why
 {
     class Scene;
@@ -52,10 +53,11 @@ namespace why
         const glm::vec3& GetPosition() const { return m_position; };
         glm::vec3 GetWorldPosition() const;
         void SetPosition(const glm::vec3& pos) { m_position = pos; };
-
+        void SetWorldPosition(const glm::vec3& pos);
         const glm::quat& GetRotation() const { return m_rotation; };
+        glm::quat GetWorldRotation();
         void SetRotation(const glm::quat& rot) { m_rotation = rot; };
-
+        void SetWorldRotation(const glm::quat& rot);
         const glm::vec3& GetScale() const { return m_scale; };
         void SetScale(const glm::vec3& scale) { m_scale = scale; };
 

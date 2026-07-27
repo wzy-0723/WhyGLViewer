@@ -11,5 +11,9 @@ namespace why
         // deltaTime in seconds
         virtual void Update(float deltaTime) = 0;
         virtual void Destroy() = 0;
+
+        virtual void RegisterTypes()
+        {
+        }
     };
 }

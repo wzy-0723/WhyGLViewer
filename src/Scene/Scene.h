@@ -9,6 +9,7 @@ namespace why
     class Scene
     {
     public:
+        static void RegisterTypes();
         void Update(float deltaTime);
         void Clear();
 
@@ -30,9 +31,11 @@ namespace why
         GameObject* GetMainCamera();
 
         std::vector<LightData> CollectLights();
+
+        static std::shared_ptr<Scene> Load(const std::string& path);
     private:
         void CollectLightsRecursive(GameObject* obj, std::vector<LightData>& out);
-
+        void LoadObject(const nlohmann::json& jsonObject, GameObject* parent);
     private:
         std::vector<std::unique_ptr<GameObject>> m_objects;
         GameObject* m_mainCamera = nullptr;

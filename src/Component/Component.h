@@ -1,5 +1,9 @@
 #pragma once
+#include <string>
+#include <unordered_map>
+#include <memory>
 
+#include <nlohmann/json.hpp>
 namespace why
 {
     class GameObject;
@@ -8,6 +12,7 @@ namespace why
     {
     public:
         virtual ~Component() = default;
+        virtual void LoadProperties(const nlohmann::json& json);
         virtual void Update(float deltaTime) = 0;
         virtual void Init();
         virtual size_t GetTypeId() const = 0;
@@ -30,8 +35,53 @@ namespace why
         static size_t nextId;
     };
 
+    class ComponentCreatorBase
+    {
+    public:
+        virtual ~ComponentCreatorBase() = default;
+        virtual Component* CreateComponent() = 0;
+    };
+
+    template<typename T>
+    class ComponentCreator : public ComponentCreatorBase
+    {
+    public:
+        Component* CreateComponent() override
+        {
+            return new T();
+        }
+    };
+
+    class ComponentFactory
+    {
+    public:
+        static ComponentFactory& GetInstance();
+
+        template<typename T>
+        void RegisterComponent(const std::string& name)
+        {
+            m_creators.emplace(name, std::make_unique<ComponentCreator<T>>());
+        }
+
+        Component* CreateComponent(const std::string& name)
+        {
+            auto it = m_creators.find(name);
+            if (it != m_creators.end())
+            {
+                return it->second->CreateComponent();
+            }
+
+            return nullptr;
+        }
+
+    private:
+        std::unordered_map<std::string, std::unique_ptr<ComponentCreatorBase>> m_creators;
+    };
+
+
 #define COMPONENT(ComponentClass) \
 public: \
-    static size_t TypeId() { return Component::StaticTypeId<ComponentClass>(); } \
-    size_t GetTypeId() const override { return TypeId(); } 
+    static size_t TypeId() { return why::Component::StaticTypeId<ComponentClass>(); } \
+    size_t GetTypeId() const override { return TypeId(); } \
+    static void Register() { why::ComponentFactory::GetInstance().RegisterComponent<ComponentClass>(std::string(#ComponentClass)); }
 }

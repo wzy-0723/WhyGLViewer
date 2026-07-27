@@ -34,6 +34,10 @@ namespace why
 		m_pInputManager = std::make_unique<why::InputManager>();
 		m_pRederQueue = std::make_unique<why::RenderQueue>();		
 
+
+		Scene::RegisterTypes();
+		m_pApplication->RegisterTypes();
+
 		return m_pApplication->Init();
 	}
 

@@ -21,18 +21,18 @@ namespace why
         void Walk(const glm::vec3& direction);
         void Jump(const glm::vec3& direction);
 
-        //ÂäµØ¼ì²â
+        //è½åœ°æ£€æµ‹
         bool OnGround() const;
 
     private:
-        // ½ºÄÒÖùÌå¸ß¶È
+        // èƒ¶å›ŠæŸ±ä½“é«˜åº¦
         float m_height = 1.2f;
-        // ½ºÄÒ°ë¾¶
+        // èƒ¶å›ŠåŠå¾„
         float m_radius = 0.4f;
 
-        // Åö×²ÓÄÁéÌå£¨½ÇÉ«Åö×²½ºÄÒÔØÌå£©
+        // ç¢°æ’å¹½çµä½“ï¼ˆè§’è‰²ç¢°æ’èƒ¶å›Šè½½ä½“ï¼‰
         std::unique_ptr<btPairCachingGhostObject> m_ghost;
-        // ½ÇÉ«ÔË¶¯¿ØÖÆÆ÷
+        // è§’è‰²è¿åŠ¨æ§åˆ¶å™¨
         std::unique_ptr<btKinematicCharacterController> m_controller;
     }; 
 }

@@ -26,4 +26,14 @@ namespace why
         command.modelMatrix = GetOwner()->GetWorldTransform();       
         SINGLETON_PTR(Engine)->GetRenderQueue()->Submit(command);
     }
+
+    void MeshComponent::SetMaterial(const std::shared_ptr<Material>& material)
+    {
+        m_material = material;
+    }
+
+    void MeshComponent::SetMesh(const std::shared_ptr<Mesh>& mesh)
+    {
+        m_mesh = mesh;
+    }
 }

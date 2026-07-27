@@ -5,6 +5,7 @@ find_package(glog CONFIG REQUIRED)
 find_package(Bullet CONFIG REQUIRED)
 find_package(stb REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
+find_path(MINIAUDIO_INCLUDE_DIRS "miniaudio.h")
 find_path(CGLTF_INCLUDE_DIRS "cgltf.h")
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core)
@@ -46,6 +47,7 @@ target_include_directories(${PROJECT_NAME}
         ${PROJECT_BINARY_DIR}
 
         ${CGLTF_INCLUDE_DIRS}
+        ${MINIAUDIO_INCLUDE_DIRS}
 )
 
 target_link_libraries(${PROJECT_NAME} 
