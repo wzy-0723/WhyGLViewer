@@ -11,9 +11,9 @@ public:
     bool Init() override;
     void Update(float deltaTime) override;
     void Destroy() override;
-
+    void RegisterTypes() override;
 private:
-    why::Scene m_scene;
+    std::shared_ptr<why::Scene> m_scene;
 };
 
 
