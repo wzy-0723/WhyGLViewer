@@ -7,6 +7,9 @@
 #include "PhysicsComponent.h"
 #include "PlayerControllerComponent.h"
 #include "Engine.h"
+#include "AudioComponent.h"
+#include "AudioListenerComponent.h"
+
 namespace why
 {
     void Scene::RegisterTypes()
@@ -17,6 +20,8 @@ namespace why
         MeshComponent::Register();
         PhysicsComponent::Register();
         PlayerControllerComponent::Register();
+        AudioComponent::Register();
+        AudioListenerComponent::Register();
     }
 
     std::shared_ptr<Scene> Scene::Load(const std::string& path)

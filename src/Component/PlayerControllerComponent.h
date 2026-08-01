@@ -12,7 +12,7 @@ namespace why
     public:
         void Init() override;
         void Update(float deltaTime) override;
-
+        bool OnGround() const;
     private:
         float m_sensitivity = 4.5f;
         float m_moveSpeed = 30.0f;

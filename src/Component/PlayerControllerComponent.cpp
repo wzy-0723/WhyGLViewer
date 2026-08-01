@@ -8,6 +8,15 @@
 
 namespace why
 {
+    bool PlayerControllerComponent::OnGround() const
+    {
+        if (m_kinematicController)
+        {
+            return m_kinematicController->OnGround();
+        }
+        return false;
+    }
+
     void PlayerControllerComponent::Init()
     {
         m_kinematicController = std::make_unique<KinematicCharacterController>(0.4f, 1.2f, m_owner->GetWorldPosition());

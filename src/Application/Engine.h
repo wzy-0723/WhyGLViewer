@@ -6,7 +6,7 @@
 #include "FileSystem.h"
 #include "Texture.h"
 #include "PhysicsManager.h"
-
+#include "AudioManager.h"
 namespace why
 {
     class Engine
@@ -24,7 +24,7 @@ namespace why
         FileSystem& GetFileSystem() { return m_fileSystem; };
         TextureManager& GetTextureManager() { return m_textureManager; };
         PhysicsManager& GetPhysicsManager() { return m_physicsManager; };
-
+        AudioManager& GetAudioManager();
         void SetScene(Scene* scene) { m_pCurrentScene.reset(scene); };
         Scene* GetScene() { return m_pCurrentScene.get(); };
 
@@ -38,7 +38,7 @@ namespace why
         std::unique_ptr<Application>            m_pApplication;
         std::unique_ptr<RenderQueue>            m_pRederQueue;
 
-
+        AudioManager m_audioManager;
         std::unique_ptr<Scene>                  m_pCurrentScene;
 
         FileSystem m_fileSystem;

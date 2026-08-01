@@ -20,7 +20,7 @@ void Game::RegisterTypes()
 
 bool Game::Init()
 {
-    // 场景加载之前
+    // 鍦烘櫙鍔犺浇涔嬪墠
     //SINGLETON_PTR(why::Engine)->SetScene(&m_scene);
 
     //auto player = m_scene->CreateObject<Player>("Player");
@@ -74,7 +74,7 @@ bool Game::Init()
     //    why::BodyType::Dynamic, boxCollider, 5.0f, 0.5f);
     //boxObj->AddComponent(new why::PhysicsComponent(boxBody));
     
-    // 场景加载之后
+    // 鍦烘櫙鍔犺浇涔嬪悗
 
     auto scene = why::Scene::Load("scenes/scene.sc");
     m_scene = scene;

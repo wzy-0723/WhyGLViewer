@@ -30,6 +30,8 @@ namespace why
 
 		SINGLETON_PTR(GraphicsAPI)->Init();
 		m_physicsManager.Init();
+		m_audioManager.Init();
+
 		m_pApplication = std::make_unique<Game>();
 		m_pInputManager = std::make_unique<why::InputManager>();
 		m_pRederQueue = std::make_unique<why::RenderQueue>();		
@@ -39,6 +41,11 @@ namespace why
 		m_pApplication->RegisterTypes();
 
 		return m_pApplication->Init();
+	}
+
+	AudioManager& Engine::GetAudioManager()
+	{
+		return m_audioManager;
 	}
 
 	void Engine::Run()

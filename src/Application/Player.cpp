@@ -5,7 +5,7 @@
 
 void Player::Init()
 {
-    //场景加载之前
+    //鍦烘櫙鍔犺浇涔嬪墠
     //AddComponent(new why::CameraComponent());
     //SetPosition(glm::vec3(0.0f, 0.0f, 2.0f));
     //AddComponent(new why::PlayerControllerComponent());
@@ -46,6 +46,10 @@ void Player::Init()
     {
         m_animationComponent = gun->GetComponent<why::AnimationComponent>();
     }
+
+
+    m_audioComponent = GetComponent<why::AudioComponent>();
+    m_playerControllerComponent = GetComponent<why::PlayerControllerComponent>();
 }
 
 void Player::Update(float deltaTime)
@@ -58,6 +62,45 @@ void Player::Update(float deltaTime)
         if (m_animationComponent && !m_animationComponent->IsPlaying())
         {
             m_animationComponent->Play("shoot", false);
+
+                        if (m_audioComponent)
+            {
+                if (m_audioComponent->IsPlaying("shoot"))
+                {
+                    m_audioComponent->Stop("shoot");
+                }
+                m_audioComponent->Play("shoot");
+            }
+        }
+    }
+    
+    if (input->IsKeyPressed(Qt::Key::Key_Space))
+    {
+        if (m_audioComponent && !m_audioComponent->IsPlaying("jump"))
+        {
+            m_audioComponent->Play("jump");
+        }
+    }
+
+    bool walking =
+        input->IsKeyPressed(Qt::Key::Key_W) ||
+        input->IsKeyPressed(Qt::Key::Key_A) ||
+        input->IsKeyPressed(Qt::Key::Key_S) ||
+        input->IsKeyPressed(Qt::Key::Key_D);
+
+    if (walking && m_playerControllerComponent && m_playerControllerComponent->OnGround())
+    {
+        if (m_audioComponent && !m_audioComponent->IsPlaying("step"))
+        {
+            m_audioComponent->Play("step", true);
+        }
+    }
+    else
+    {
+        if (m_audioComponent && m_audioComponent->IsPlaying("step"))
+        {
+            m_audioComponent->Stop("step");
+
         }
     }
 }
