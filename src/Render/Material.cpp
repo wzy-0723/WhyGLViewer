@@ -24,6 +24,11 @@ namespace why
 		m_textures[name] = texture;
 	}
 
+	void Material::SetParam(const std::string& name, const glm::vec3& value)
+	{
+		m_float3Params[name] = value;
+	}
+
 	void Material::Bind()
 	{
 		if (!m_pShaderProgram)
@@ -41,6 +46,11 @@ namespace why
 		for (auto& param : m_float2Params)
 		{
 			m_pShaderProgram->SetUniform(param.first.c_str(), param.second.first, param.second.second);
+		}
+
+		for (auto& param : m_float3Params)
+		{
+			m_pShaderProgram->SetUniform(param.first, param.second);
 		}
 
 		for (auto& param : m_textures)
@@ -104,6 +114,19 @@ namespace why
 					float v0 = p.value("value0", 0.0f);
 					float v1 = p.value("value1", 0.0f);
 					result->SetParam(name, v0, v1);
+				}
+			}
+
+			// Float3
+			if (paramsObj.contains("float3"))
+			{
+				for (auto& p : paramsObj["float3"])
+				{
+					std::string name = p.value("name", "");
+					float v0 = p.value("value0", 0.0f);
+					float v1 = p.value("value1", 0.0f);
+					float v2 = p.value("value2", 0.0f);
+					result->SetParam(name, glm::vec3(v0, v1, v2));
 				}
 			}
 

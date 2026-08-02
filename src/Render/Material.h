@@ -4,6 +4,7 @@
 #include <iostream>
 #include "ShaderProgram.h"
 #include "Texture.h"
+#include <glm/vec3.hpp>
 namespace why
 {
     class Material
@@ -17,6 +18,7 @@ namespace why
         void SetParam(const std::string& name, float value);
         void SetParam(const std::string& name, float v0, float v1);
         void SetParam(const std::string& name, const std::shared_ptr<Texture>& texture);
+        void SetParam(const std::string& name, const glm::vec3& value);
 
         void Bind();
 
@@ -27,5 +29,6 @@ namespace why
         std::unordered_map<std::string, float> m_floatParams;
         std::unordered_map<std::string, std::pair<float, float>> m_float2Params;
         std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures;
+        std::unordered_map<std::string, glm::vec3> m_float3Params;
     };
 }

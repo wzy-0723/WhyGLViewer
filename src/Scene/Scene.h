@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "GameObject.h"
 #include <vector>
 #include <string>
@@ -49,7 +49,7 @@ namespace why
     private:
         std::vector<std::unique_ptr<GameObject>> m_objects;
 
-		// Ìí¼Ó×Óµ¯Âß¼­Ïà¹Ø£¬ÔÚ¸üĞÂÑ­»·ÖĞÌí¼Ó¶ÔÏóÊ±£¬±ÜÃâÖ±½ÓĞŞ¸Ä m_objects£¬·ÀÖ¹µü´úÆ÷Ê§Ğ§
+		// æ·»åŠ å­å¼¹é€»è¾‘ç›¸å…³ï¼Œåœ¨æ›´æ–°å¾ªç¯ä¸­æ·»åŠ å¯¹è±¡æ—¶ï¼Œé¿å…ç›´æ¥ä¿®æ”¹ m_objectsï¼Œé˜²æ­¢è¿­ä»£å™¨å¤±æ•ˆ
         std::vector<std::pair<GameObject*, GameObject*>> m_objectsToAdd;
         bool m_isUpdating = false;
 
