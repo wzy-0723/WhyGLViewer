@@ -11,10 +11,13 @@
 #include "AnimationComponent.h"
 #include "PhysicsComponent.h"
 #include "Player.h"
-
+#include "Bullet.h"
+#include "JumpPlatform.h"
 void Game::RegisterTypes()
 {
     Player::Register();
+    Bullet::Register();
+    JumpPlatform::Register();
 }
 
 

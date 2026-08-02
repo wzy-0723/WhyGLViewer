@@ -10,6 +10,8 @@ namespace why
     KinematicCharacterController::KinematicCharacterController(float raduis, float height, const glm::vec3& position)
         : m_radius(raduis), m_height(height)
     {
+
+        m_collisionObjectType = CollisionObjectType::KinematicCharacterController;
         
         auto world = SINGLETON_PTR(Engine)->GetPhysicsManager().GetWorld();
         // 创建胶囊碰撞形状 btCapsuleShape
@@ -24,6 +26,9 @@ namespace why
         start.setOrigin(btVector3(position.x, position.y, position.z)); // 设置初始生成世界坐标
         m_ghost->setWorldTransform(start);                              // 给幽灵体赋予初始位姿
         m_ghost->setCollisionShape(capsule);
+
+        m_ghost->setUserPointer(this);
+
         //CF_CHARACTER_OBJECT：碰撞标记，告知 Bullet 该物体是玩家角色，物理求解时使用角色专属碰撞规则。
         m_ghost->setCollisionFlags(m_ghost->getCollisionFlags() | btCollisionObject::CF_CHARACTER_OBJECT);
 

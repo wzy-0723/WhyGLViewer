@@ -1,9 +1,9 @@
 #include "PhysicsManager.h"
 #include "RigidBody.h"
-
+#include "CollisionObject.h"
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
-
+#include "CollisionObject.h"
 namespace why
 {
     PhysicsManager::PhysicsManager()
@@ -40,6 +40,53 @@ namespace why
         const int maxSubsteps = 4;
         //根据传入帧时间，自动拆分若干个 1/60s 固定子步，逐次执行碰撞检测、约束求解、更新刚体位置旋转。
         m_world->stepSimulation(deltaTime, maxSubsteps, fixedTimeStep);
+
+        // process collisions
+        auto dispatcher = m_world->getDispatcher();//获取当前物理世界内部持有的碰撞调度器实例指针
+        /*
+        两个物体距离足够近、产生 / 即将产生碰撞时，Bullet 会为这一对物体创建一个 btPersistentManifold 对象：碰撞流形
+        存储这两个碰撞物体指针（body0、body1）；
+            保存二者之间所有碰撞触点、碰撞法线、穿透深度；
+            持续性复用：两物体持续贴合接触（人物站地面、箱子堆叠），这个流形会保留，不用每帧反复新建销毁，提升性能；
+            一旦两个物体彻底分开不再靠近，该 Manifold 会被引擎自动清理销毁。
+            简单概括：每一对正在发生碰撞 / 紧贴的物体，对应 1 个 PersistentManifold。
+         */
+
+        //getNumManifolds统计并返回：当前调度器内现存所有碰撞流形的总数。也就是：此刻场景中，存在多少对互相接触、贴近的碰撞物体组合。
+        const auto numManifolds = dispatcher->getNumManifolds();
+        for (int i = 0; i < numManifolds; ++i)
+        {
+            auto manifold = dispatcher->getManifoldByIndexInternal(i);
+            if (!manifold)
+            {
+                continue;
+            }
+
+            auto bodyA = reinterpret_cast<CollisionObject*>(manifold->getBody0()->getUserPointer());
+            auto bodyB = reinterpret_cast<CollisionObject*>(manifold->getBody1()->getUserPointer());
+
+            if (!bodyA || !bodyB)
+            {
+                continue;
+            }
+
+            const auto numContacts = manifold->getNumContacts();
+            for (int j = 0; j < numContacts; ++j)
+            {
+                const auto& point = manifold->getContactPoint(j);
+                const glm::vec3 pos(
+                    point.m_positionWorldOnB.x(),
+                    point.m_positionWorldOnB.y(),
+                    point.m_positionWorldOnB.z());
+                const glm::vec3 norm(
+                    point.m_normalWorldOnB.x(),
+                    point.m_normalWorldOnB.y(),
+                    point.m_normalWorldOnB.z());
+
+                bodyA->DispatchContactEvent(bodyB, pos, norm);
+                bodyB->DispatchContactEvent(bodyA, pos, norm);
+            }
+        }
     }
 
     void PhysicsManager::AddRigidBody(RigidBody* body)

@@ -3,13 +3,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <memory>
-
+#include "CollisionObject.h"
 class btPairCachingGhostObject;
 class btKinematicCharacterController;
 
 namespace why
 {
-    class KinematicCharacterController
+    class KinematicCharacterController : public CollisionObject
     {
     public:
         //KinematicCharacterController(float raduis, float height);

@@ -15,6 +15,8 @@ namespace why
 			return;
 		}
 
+		m_collisionObjectType = CollisionObjectType::RigidBody;
+
 		/*
 		惯性张量计算：
 			Static/Kinematic 惯性保持 0，无转动；
@@ -47,6 +49,8 @@ namespace why
 		m_body = std::make_unique<btRigidBody>(info);
 		m_body->setFriction(friction);
 
+
+		m_body->setUserPointer(this);
 		/*
 		运动学刚体专属配置：
 		开启 CF_KINEMATIC_OBJECT 标记，Bullet 规则：不受重力、碰撞冲击力，只能代码驱动位置；

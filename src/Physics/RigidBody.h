@@ -4,7 +4,7 @@
 #include <glm/gtc/quaternion.hpp>
 
 #include <memory>
-
+#include "CollisionObject.h"
 /*
 * btRigidBody 内部依赖构成（创建刚体必备四件套）
 btCollisionShape：碰撞形状（球体、立方体、胶囊、凸包等），决定碰撞边界；
@@ -31,7 +31,7 @@ namespace why
 	绑定碰撞体 Collider，提供 glm 风格位置旋转读写接口，
 	自动处理物理世界卸载、生命周期管理，隔离游戏业务与原生 Bullet 底层 API。
 	*/
-	class RigidBody
+	class RigidBody : public CollisionObject
 	{
 	public:
 		RigidBody(BodyType type, const std::shared_ptr<Collider>& collider, float mass, float friction);
