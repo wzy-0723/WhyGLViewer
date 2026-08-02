@@ -14,8 +14,15 @@ namespace why
         Mesh& operator=(const Mesh&) = delete;
 
         void Bind();
+        void Unbind();
         void Draw();
         static std::shared_ptr<Mesh> CreateBox(const glm::vec3& extents = glm::vec3(1.0f));
+        /*
+        radius：球体半径
+        sectors：水平分段数（环绕 Z 轴一圈的切分份数，横向分片）
+        stacks：垂直分段数（南北极之间纵向切分份数，纵向分片）       
+        */
+        static std::shared_ptr<Mesh> CreateSphere(float radius, int sectors, int stacks);
         //static std::shared_ptr<Mesh> Load(const std::string& path);
 
     private:

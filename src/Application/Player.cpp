@@ -2,7 +2,11 @@
 #include "CameraComponent.h"
 #include "PlayerControllerComponent.h"
 #include "Engine.h"
+#include "Bullet.h"
+#include "MeshComponent.h"
+#include "Collider.h"
 
+#include "PhysicsComponent.h"
 void Player::Init()
 {
     //场景加载之前
@@ -72,6 +76,26 @@ void Player::Update(float deltaTime)
                 m_audioComponent->Play("shoot");
             }
         }
+
+        auto bullet = m_scene->CreateObject<Bullet>("Bullet");
+        auto material = why::Material::Load("Materials/suzanne.mat");
+        auto mesh = why::Mesh::CreateSphere(0.2f, 32, 32);
+        bullet->AddComponent(new why::MeshComponent(material, mesh));
+
+        glm::vec3 pos = glm::vec3(0.0f);
+        if (auto child = FindChildByName("BOOM_35"))
+        {
+            pos = child->GetWorldPosition();
+        }
+        bullet->SetPosition(pos + m_rotation * glm::vec3(-0.2f, 0.2f, -1.75f));
+
+        auto collider = std::make_shared<why::SphereCollider>(0.2f);
+        auto rigidBody = std::make_shared<why::RigidBody>(
+            why::BodyType::Dynamic, collider, 10.0f, 0.1f);
+        bullet->AddComponent(new why::PhysicsComponent(rigidBody));
+
+        glm::vec3 front = m_rotation * glm::vec3(0.0f, 0.0f, -1.0f);
+        rigidBody->ApplyImpulse(front * 500.0f);
     }
     
     if (input->IsKeyPressed(Qt::Key::Key_Space))

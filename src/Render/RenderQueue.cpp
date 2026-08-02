@@ -30,6 +30,7 @@ namespace why
 
             SINGLETON_PTR(GraphicsAPI)->BindMesh(command.mesh);
             SINGLETON_PTR(GraphicsAPI)->DrawMesh(command.mesh);
+            SINGLETON_PTR(GraphicsAPI)->UnbindMesh(command.mesh);
         }
 
         m_commands.clear();

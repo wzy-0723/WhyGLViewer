@@ -22,7 +22,15 @@ namespace why
             auto obj = new T();
             obj->SetName(name);
             obj->m_scene = this;
-            SetParent(obj, parent);
+
+            if (m_isUpdating)
+            {
+                m_objectsToAdd.push_back({ obj, parent });
+            }
+            else
+            {
+                SetParent(obj, parent);
+            }
             return obj;
         }
 
@@ -40,6 +48,12 @@ namespace why
         void LoadObject(const nlohmann::json& jsonObject, GameObject* parent);
     private:
         std::vector<std::unique_ptr<GameObject>> m_objects;
+
+		// 添加子弹逻辑相关，在更新循环中添加对象时，避免直接修改 m_objects，防止迭代器失效
+        std::vector<std::pair<GameObject*, GameObject*>> m_objectsToAdd;
+        bool m_isUpdating = false;
+
+
         GameObject* m_mainCamera = nullptr;
     };
 }

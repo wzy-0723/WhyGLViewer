@@ -202,6 +202,14 @@ namespace why
         }
     }
 
+    void GraphicsAPI::UnbindMesh(Mesh* mesh)
+    {
+        if (mesh)
+        {
+            mesh->Unbind();
+        }
+    }
+
     void GraphicsAPI::DrawMesh(Mesh* mesh)
     {
         if (nullptr != mesh)

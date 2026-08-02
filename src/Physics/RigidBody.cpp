@@ -3,7 +3,8 @@
 
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
-
+#include <glm/vec3.hpp>
+#include <glm/gtc/quaternion.hpp>
 namespace why
 {
 	RigidBody::RigidBody(BodyType type, const std::shared_ptr<Collider>& collider, float mass, float friction)
@@ -107,6 +108,11 @@ namespace why
 
 	glm::vec3 RigidBody::GetPosition() const
 	{
+		if (!m_body)
+		{
+			return glm::vec3(0.0f, 0.0f, 0.0f);
+		}
+
 		const auto& pos = m_body->getWorldTransform().getOrigin();
 		return glm::vec3(pos.x(), pos.y(), pos.z());
 	}
@@ -129,7 +135,25 @@ namespace why
 
 	glm::quat RigidBody::GetRotation() const
 	{
+		if (!m_body)
+		{
+			return glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+		}
+
 		const auto& rot = m_body->getWorldTransform().getRotation();
 		return glm::quat(rot.w(), rot.x(), rot.y(), rot.z());
+	}
+
+	void RigidBody::ApplyImpulse(const glm::vec3& impulse)
+	{
+		if (!m_body)
+		{
+			return;
+		}
+
+		//向刚体质心（几何中心）施加一次性瞬时冲量,冲量=mv
+		m_body->applyCentralImpulse(btVector3(
+			btScalar(impulse.x), btScalar(impulse.y), btScalar(impulse.z)
+		));
 	}
 }
