@@ -6,6 +6,106 @@
 #include "OpenGLFunc.h"
 namespace why
 {
+    void GraphicsAPI::SetDepthTestEnabled(bool enabled)
+    {        
+        if (enabled)
+        {
+            GLCall(glEnable(GL_DEPTH_TEST));
+        }
+        else
+        {
+            GLCall(glDisable(GL_DEPTH_TEST));
+        }
+    }
+
+    void GraphicsAPI::SetBlendMode(BlendMode mode)
+    {
+        switch (mode)
+        {
+        case BlendMode::Disabled:
+        {
+            GLCall(glDisable(GL_BLEND));
+        }
+        break;
+        case BlendMode::Alpha:
+        {
+            GLCall(glEnable(GL_BLEND));
+            GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+        }
+        break;
+        case BlendMode::Additive:
+        {
+            GLCall(glEnable(GL_BLEND));
+            GLCall(glBlendFunc(GL_ONE, GL_ONE));
+        }
+        break;
+        case BlendMode::Multiply:
+        {
+            GLCall(glEnable(GL_BLEND));
+            GLCall(glBlendFunc(GL_DST_COLOR, GL_ZERO));
+        }
+        break;
+        default:
+        {
+            GLCall(glDisable(GL_BLEND));
+        }
+        break;
+        }
+    }
+
+    const std::shared_ptr<ShaderProgram>& GraphicsAPI::GetDefault2DShaderProgram()
+    {
+        if (!m_default2DShaderProgram)
+        {
+            std::string vertexShaderSource = R"(
+            #version 330 core
+            layout (location = 0) in vec2 position;
+        
+            out vec2 vUV;
+        
+            uniform mat4 uModel;
+            uniform mat4 uView;
+            uniform mat4 uProjection;
+
+            uniform vec2 uPivot;
+            uniform vec2 uSize;    
+
+            uniform vec2 uUVMin;
+            uniform vec2 uUVMax;  
+        
+            void main()
+            {
+                vec2 local = (position - uPivot) * uSize;
+                vUV = mix(uUVMin, uUVMax, position);
+                
+                gl_Position = uProjection * uView * uModel * vec4(local, 0.0, 1.0);
+            }
+            )";
+
+            std::string fragmentShaderSource = R"(
+            #version 330 core
+
+            in vec2 vUV;
+
+            uniform vec4 uColor;
+
+            uniform sampler2D uTex;
+
+            out vec4 FragColor;
+
+            void main()
+            {
+                vec4 src = texture(uTex, vUV) * uColor;
+                FragColor = src;
+            }
+            )";
+
+            m_default2DShaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
+        }
+
+        return m_default2DShaderProgram;
+    }
+
     bool GraphicsAPI::Init()
     {
         // 保存像素的Z深度，因为屏幕实际显示2维信息，当重叠时开启深度测试才能正确显示当前视角下的像素颜色

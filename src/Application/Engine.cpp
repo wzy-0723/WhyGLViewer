@@ -31,10 +31,11 @@ namespace why
 		SINGLETON_PTR(GraphicsAPI)->Init();
 		m_physicsManager.Init();
 		m_audioManager.Init();
-
+		m_pRederQueue = std::make_unique<why::RenderQueue>();
+		m_pRederQueue->Init();
 		m_pApplication = std::make_unique<Game>();
 		m_pInputManager = std::make_unique<why::InputManager>();
-		m_pRederQueue = std::make_unique<why::RenderQueue>();		
+				
 
 
 		Scene::RegisterTypes();
@@ -64,11 +65,13 @@ namespace why
 		CameraData cameraData;
 		std::vector<LightData> lights;
 
-		int width = 0;
-		int height = 0;
+
 		GLint viewport[4];
 		OPENGLFUNC->glGetIntegerv(GL_VIEWPORT, viewport);
 		float aspect = static_cast<float>(viewport[2]) / static_cast<float>(viewport[3]);
+
+		int width = viewport[2];
+		int height = viewport[3];
 
 		if (m_pCurrentScene)
 		{
@@ -78,9 +81,17 @@ namespace why
 				auto cameraComponent = cameraObject->GetComponent<CameraComponent>();
 				if (cameraComponent)
 				{					
-					cameraData.viewMatrix = cameraComponent->GetViewMatrix();//@why:相机变化
+					cameraData.viewMatrix = cameraComponent->GetViewMatrix();//@why.tostudy:相机变化
 					cameraData.projectionMatrix = cameraComponent->GetProjectionMatrix(aspect);
 					cameraData.position = cameraObject->GetWorldPosition();
+					/*
+						生成正交投影矩阵（正射投影）。
+						正交投影特点：没有透视近大远小，平行线永远平行。
+					*/
+					cameraData.orthoMatrix = glm::ortho(
+						0.0f, static_cast<float>(width),
+						0.0f, static_cast<float>(height)
+					);
 				}
 			}
 			lights = m_pCurrentScene->CollectLights();

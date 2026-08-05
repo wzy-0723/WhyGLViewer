@@ -51,7 +51,7 @@ namespace why
 
         void SetActive(bool active) { m_active = active; };
         bool IsActive() { return m_active; };
-
+        //3D
         const glm::vec3& GetPosition() const { return m_position; };
         glm::vec3 GetWorldPosition() const;
         void SetPosition(const glm::vec3& pos) { m_position = pos; };
@@ -65,6 +65,17 @@ namespace why
 
         glm::mat4 GetLocalTransform() const;
         glm::mat4 GetWorldTransform() const;
+
+        //2D
+        glm::vec2 GetPosition2D() const;
+        glm::vec2 GetWorldPosition2D() const;
+        void SetPosition2D(const glm::vec2& pos);
+        float GetRotation2D() const;
+        void SetRotation2D(float rotation);
+        glm::vec2 GetScale2D() const;
+        void SetScale2D(const glm::vec2& scale);
+        glm::mat4 GetLocalTransform2D() const;
+        glm::mat4 GetWorldTransform2D() const;
 
         // 相当于把材质和顶点数据加载放在一起，关注ParseGLTFNode函数
         static GameObject* LoadGLTF(const std::string& path);

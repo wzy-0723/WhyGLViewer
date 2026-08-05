@@ -10,6 +10,7 @@ namespace why
         glm::mat4 viewMatrix;
         glm::mat4 projectionMatrix;
         glm::vec3 position;
+        glm::mat4 orthoMatrix;
     };
 
     struct LightData

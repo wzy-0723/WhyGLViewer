@@ -8,6 +8,14 @@
 #include "ShaderProgram.h"
 namespace why
 {
+    enum class BlendMode
+    {
+        Disabled,
+        Alpha,
+        Additive,
+        Multiply
+    };
+
     class GraphicsAPI
     {
     public:
@@ -16,6 +24,7 @@ namespace why
         std::shared_ptr<ShaderProgram> CreateShaderProgram(const std::string& vertexSource,
             const std::string& fragmentSource);
 
+        const std::shared_ptr<ShaderProgram>& GetDefault2DShaderProgram();
         const std::shared_ptr<ShaderProgram>& GetDefaultShaderProgram();
 
         //std::shared_ptr<QOpenGLShaderProgram> CreateShaderProgram(const std::string& strShaderName);
@@ -33,9 +42,13 @@ namespace why
         void UnbindMesh(Mesh* mesh);
         void DrawMesh(Mesh* mesh);
 
+        void SetDepthTestEnabled(bool enabled);
+        void SetBlendMode(BlendMode mode);
+
     private:
         GraphicsAPI() {};
     private:
         std::shared_ptr<ShaderProgram> m_defaultShaderProgram;
+        std::shared_ptr<ShaderProgram> m_default2DShaderProgram;
     };
 }

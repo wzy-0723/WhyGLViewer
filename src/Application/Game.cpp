@@ -13,6 +13,7 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "JumpPlatform.h"
+#include "SpriteComponent.h"
 void Game::RegisterTypes()
 {
     Player::Register();
@@ -78,11 +79,35 @@ bool Game::Init()
     //boxObj->AddComponent(new why::PhysicsComponent(boxBody));
     
     // 场景加载之后
+    //3D
+    //auto scene = why::Scene::Load("scenes/scene.sc");
+    //m_scene = scene;
+    //SINGLETON_PTR(why::Engine)->SetScene(scene.get());
 
-    auto scene = why::Scene::Load("scenes/scene.sc");
-    m_scene = scene;
+    //2D
+    m_scene = std::make_shared<why::Scene>();
+    SINGLETON_PTR(why::Engine)->SetScene(m_scene.get());
 
-    SINGLETON_PTR(why::Engine)->SetScene(scene.get());
+    auto sprite = m_scene->CreateObject("Sprite");
+    auto spriteComponent = new why::SpriteComponent();
+
+    auto texture = why::Texture::Load("textures/brick.png");
+    spriteComponent->SetTexture(texture);
+
+    sprite->AddComponent(spriteComponent);
+    sprite->SetPosition2D(glm::vec2(500.0f, 500.0f));
+
+    spriteComponent->SetSize(glm::vec2(200.0f, 100.0f));
+    spriteComponent->SetUpperRightUV(glm::vec2(2.0f, 1.0f));
+    sprite->SetRotation2D(glm::radians(45.0f));
+
+
+    auto camera = m_scene->CreateObject("Camera");
+    auto cameraComponent = new why::CameraComponent();
+    camera->AddComponent(cameraComponent);
+    m_scene->SetMainCamera(camera);
+
+
 
     return true;
 }

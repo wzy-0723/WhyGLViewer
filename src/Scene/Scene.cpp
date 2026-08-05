@@ -9,7 +9,7 @@
 #include "Engine.h"
 #include "AudioComponent.h"
 #include "AudioListenerComponent.h"
-
+#include "SpriteComponent.h"
 namespace why
 {
     void Scene::RegisterTypes()
@@ -22,6 +22,7 @@ namespace why
         PlayerControllerComponent::Register();
         AudioComponent::Register();
         AudioListenerComponent::Register();
+        SpriteComponent::Register();
     }
 
     std::shared_ptr<Scene> Scene::Load(const std::string& path)

@@ -60,6 +60,14 @@ namespace why
         m_vertexCout = (vertices.size() * sizeof(float)) / m_vertexLayout.stride;
     }
 
+    Mesh::~Mesh()
+    {
+        // 销毁VAO,VBO,EBO OpenGL资源
+        GLCall(glDeleteVertexArrays(1, &m_VAO));
+        if (m_VBO) GLCall(glDeleteBuffers(1, &m_VBO));
+        if (m_EBO) GLCall(glDeleteBuffers(1, &m_EBO));
+    }
+
     void Mesh::Bind()
     {
         GLCall(glBindVertexArray(m_VAO));
@@ -271,6 +279,38 @@ namespace why
         vertexLayout.stride = sizeof(float) * 11;
 
         auto result = std::make_shared<why::Mesh>(vertexLayout, vertices, indices);
+
+        return result;
+    }
+
+    std::shared_ptr<Mesh> Mesh::CreatePlane()
+    {
+        std::vector<float> vertices =
+        {
+            1.0f, 1.0f,
+            0.0f, 1.0f,
+            0.0f, 0.0f,
+            1.0f, 0.0f
+        };
+
+        std::vector<uint32_t> indices =
+        {
+            0, 1, 2,
+            0, 2, 3
+        };
+
+        why::VertexLayout vertexLayout;
+
+        // Position
+        vertexLayout.elements.push_back({
+            VertexElement::PositionIndex,
+            2,
+            GL_FLOAT,
+            0
+            });
+        vertexLayout.stride = sizeof(float) * 2;
+
+        auto result = std::make_shared<Mesh>(vertexLayout, vertices, indices);
 
         return result;
     }

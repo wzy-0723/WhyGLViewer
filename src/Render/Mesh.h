@@ -10,9 +10,9 @@ namespace why
     public:
         Mesh(const VertexLayout& layout, const std::vector<float>& vertices, const std::vector<uint32_t>& indices);
         Mesh(const VertexLayout& layout, const std::vector<float>& vertices);
-        Mesh(const Mesh&) = delete;
-        Mesh& operator=(const Mesh&) = delete;
-
+        //Mesh(const Mesh&) = delete;
+        //Mesh& operator=(const Mesh&) = delete;
+        ~Mesh();
         void Bind();
         void Unbind();
         void Draw();
@@ -24,7 +24,7 @@ namespace why
         */
         static std::shared_ptr<Mesh> CreateSphere(float radius, int sectors, int stacks);
         //static std::shared_ptr<Mesh> Load(const std::string& path);
-
+        static std::shared_ptr<Mesh> CreatePlane();
     private:
         VertexLayout m_vertexLayout;
         GLuint m_VBO = 0;
