@@ -35,7 +35,8 @@ namespace why
 
             for (auto& component : m_components)
             {
-                if (component->GetTypeId() == typeId)
+                if (component->GetTypeId() == typeId ||
+                    ComponentFactory::GetInstance().HasParent(component->GetTypeId(), typeId))
                 {
                     return static_cast<T*>(component.get());
                 }
@@ -44,7 +45,7 @@ namespace why
             return nullptr;
         };
         GameObject* FindChildByName(const std::string& name);
-
+        const std::vector<std::unique_ptr<GameObject>>& GetChildren() const;
 
         Scene* GetScene() { return  m_scene; };
 

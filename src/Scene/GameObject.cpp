@@ -17,6 +17,11 @@
 
 namespace why
 {
+    const std::vector<std::unique_ptr<GameObject>>& GameObject::GetChildren() const
+    {
+        return m_children;
+    }
+
     void GameObject::Init()
     {
     }

@@ -10,6 +10,10 @@
 #include "AudioComponent.h"
 #include "AudioListenerComponent.h"
 #include "SpriteComponent.h"
+#include "UIElementComponent.h"
+#include "CanvasComponent.h"
+#include "TextComponent.h"
+
 namespace why
 {
     void Scene::RegisterTypes()
@@ -23,6 +27,10 @@ namespace why
         AudioComponent::Register();
         AudioListenerComponent::Register();
         SpriteComponent::Register();
+
+        UIElementComponent::Register();
+        CanvasComponent::Register();
+        TextComponent::Register();
     }
 
     std::shared_ptr<Scene> Scene::Load(const std::string& path)

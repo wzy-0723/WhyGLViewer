@@ -36,6 +36,7 @@ target_include_directories(${PROJECT_NAME}
         ./Audio
 		./Application
         ./Component
+        ./Component/ui
 		./Graphic
         ./Input
         ./Gui

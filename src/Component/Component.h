@@ -13,7 +13,7 @@ namespace why
     public:
         virtual ~Component() = default;
         virtual void LoadProperties(const nlohmann::json& json);
-        virtual void Update(float deltaTime) = 0;
+        virtual void Update(float deltaTime);
         virtual void Init();
         virtual size_t GetTypeId() const = 0;
         GameObject* GetOwner();
@@ -61,7 +61,17 @@ namespace why
         void RegisterComponent(const std::string& name)
         {
             m_creators.emplace(name, std::make_unique<ComponentCreator<T>>());
+            m_parentMap[T::TypeId()].push_back(Component::StaticTypeId<Component>());
         }
+
+        template<typename T, typename ParentType>
+        void RegisterComponent(const std::string& name)
+        {
+            m_creators.emplace(name, std::make_unique<ComponentCreator<T>>());
+            m_parentMap[T::TypeId()].push_back(Component::StaticTypeId<ParentType>());
+        }
+
+        bool HasParent(size_t objectType, size_t parentType);
 
         Component* CreateComponent(const std::string& name)
         {
@@ -76,6 +86,7 @@ namespace why
 
     private:
         std::unordered_map<std::string, std::unique_ptr<ComponentCreatorBase>> m_creators;
+		std::unordered_map<size_t, std::vector<size_t>> m_parentMap;//当前类型的所有父类型的typeid集合
     };
 
 
@@ -84,4 +95,10 @@ public: \
     static size_t TypeId() { return why::Component::StaticTypeId<ComponentClass>(); } \
     size_t GetTypeId() const override { return TypeId(); } \
     static void Register() { why::ComponentFactory::GetInstance().RegisterComponent<ComponentClass>(std::string(#ComponentClass)); }
-}
+
+#define COMPONENT_2(ComponentClass, ParentComponentClass) \
+public: \
+    static size_t TypeId() { return why::Component::StaticTypeId<ComponentClass>(); } \
+    size_t GetTypeId() const override { return TypeId(); } \
+    static void Register() { why::ComponentFactory::GetInstance().RegisterComponent<ComponentClass, ParentComponentClass>(std::string(#ComponentClass)); }
+};
