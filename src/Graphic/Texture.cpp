@@ -6,6 +6,16 @@
 
 namespace why
 {
+    int Texture::GetWidth() const
+    {
+        return m_width;
+    }
+
+    int Texture::GetHeight() const
+    {
+        return m_height;
+    }
+
     Texture::Texture(int width, int height, int numChannels, unsigned char* data)
         : m_width(width), m_height(height), m_numChannels(numChannels)
     {

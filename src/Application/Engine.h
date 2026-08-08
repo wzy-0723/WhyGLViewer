@@ -15,7 +15,7 @@ namespace why
         template<typename> friend class Singleton;
     public:
 
-        bool Init();
+        bool Init(int width, int height);
         void Run();
         void Destroy();
 

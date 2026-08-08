@@ -1,8 +1,13 @@
 #include "RenderQueue.h"
-
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace why
 {
+    void RenderQueue::Submit(const RenderCommandUI& command)
+    {
+        m_commandsUI.push_back(command);
+    }
+
     void RenderQueue::Submit(const RenderCommand& command)
     {
         m_commands.push_back(command);
@@ -62,6 +67,41 @@ namespace why
         SINGLETON_PTR(GraphicsAPI)->SetBlendMode(BlendMode::Disabled);
         SINGLETON_PTR(GraphicsAPI)->SetDepthTestEnabled(true);
         m_commands2D.clear();
+
+        // UI
+        SINGLETON_PTR(GraphicsAPI)->SetDepthTestEnabled(false);
+        SINGLETON_PTR(GraphicsAPI)->SetBlendMode(BlendMode::Alpha);
+        for (auto& command : m_commandsUI)
+        {
+            glm::mat4 ortho = glm::ortho(
+                0.0f, static_cast<float>(command.screenWidth),
+                0.0f, static_cast<float>(command.screenHeight)
+            );
+            command.shaderProgram->Bind();
+            command.shaderProgram->SetUniform("uProjection", ortho);
+
+            command.mesh->Bind();
+
+            uint32_t indexBase = 0;
+            for (auto& batch : command.batches)
+            {
+                if (batch.texture)
+                {
+                    command.shaderProgram->SetUniform("uUseTexture", 1);
+                    command.shaderProgram->SetTexture("uTex", batch.texture);
+                }
+                else
+                {
+                    command.shaderProgram->SetUniform("uUseTexture", 0);
+                }
+                command.mesh->DrawIndexedRange(indexBase, batch.indexCount);
+                indexBase += batch.indexCount;
+            }
+            command.mesh->Unbind();
+        }
+        SINGLETON_PTR(GraphicsAPI)->SetBlendMode(BlendMode::Disabled);
+        SINGLETON_PTR(GraphicsAPI)->SetDepthTestEnabled(true);
+        m_commandsUI.clear();
     }
 
     void RenderQueue::Init()

@@ -21,8 +21,11 @@ GLView::~GLView()
 
 void GLView::initializeGL()
 {
+    int w = width();
+    int h = height();
+
     SINGLETON_PTR(OpenGLFunc)->initializeOpenGLFunctions();
-    SINGLETON_PTR(why::Engine)->Init();
+    SINGLETON_PTR(why::Engine)->Init(w, h);
 }
 
 void GLView::resizeGL(int w, int h)

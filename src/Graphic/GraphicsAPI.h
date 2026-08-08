@@ -16,6 +16,15 @@ namespace why
         Multiply
     };
 
+    struct Rect
+    {
+        int x = 0;
+        int y = 0;
+        int width = 0;
+        int height = 0;
+    };
+
+
     class GraphicsAPI
     {
     public:
@@ -26,6 +35,7 @@ namespace why
 
         const std::shared_ptr<ShaderProgram>& GetDefault2DShaderProgram();
         const std::shared_ptr<ShaderProgram>& GetDefaultShaderProgram();
+        const std::shared_ptr<ShaderProgram>& GetDefaultUIShaderProgram();
 
         //std::shared_ptr<QOpenGLShaderProgram> CreateShaderProgram(const std::string& strShaderName);
 
@@ -34,6 +44,8 @@ namespace why
 
         void SetClearColor(float r, float g, float b, float a);
         void ClearBuffers();
+        const Rect& GetViewport() const;
+        void SetViewport(int x, int y, int width, int height);
         bool Init();
         
         void BindShaderProgram(ShaderProgram* shaderProgram);
@@ -48,7 +60,9 @@ namespace why
     private:
         GraphicsAPI() {};
     private:
+        Rect m_viewport;
         std::shared_ptr<ShaderProgram> m_defaultShaderProgram;
         std::shared_ptr<ShaderProgram> m_default2DShaderProgram;
+        std::shared_ptr<ShaderProgram> m_defaultUIShaderProgram;
     };
 }

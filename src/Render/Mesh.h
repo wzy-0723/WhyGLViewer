@@ -25,6 +25,13 @@ namespace why
         static std::shared_ptr<Mesh> CreateSphere(float radius, int sectors, int stacks);
         //static std::shared_ptr<Mesh> Load(const std::string& path);
         static std::shared_ptr<Mesh> CreatePlane();
+
+
+        //动态绘制
+        void DrawIndexedRange(uint32_t startIndex, uint32_t indexCount);
+        void UpdateDynamic(const std::vector<float>& vertices);
+        void UpdateDynamic(const std::vector<float>& vertices, const std::vector<uint32_t>& indices);
+
     private:
         VertexLayout m_vertexLayout;
         GLuint m_VBO = 0;

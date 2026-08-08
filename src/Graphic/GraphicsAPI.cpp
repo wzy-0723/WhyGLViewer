@@ -322,4 +322,65 @@ namespace why
         }
     }
 
+    const std::shared_ptr<ShaderProgram>& GraphicsAPI::GetDefaultUIShaderProgram()
+    {
+        if (!m_defaultUIShaderProgram)
+        {
+            std::string vertexShaderSource = R"(
+            #version 330 core
+            layout (location = 0) in vec2 position;
+            layout (location = 1) in vec4 color;
+            layout (location = 2) in vec2 uv;
+
+            out vec2 vUV;
+            out vec4 vColor;
+        
+            uniform mat4 uProjection;
+
+            void main()
+            {
+                vUV = uv;
+                vColor = color;
+                
+                gl_Position = uProjection * vec4(position, 0.0, 1.0);
+            }
+            )";
+
+            std::string fragmentShaderSource = R"(
+            #version 330 core
+
+            in vec2 vUV;
+            in vec4 vColor;
+
+            uniform sampler2D uTex;
+            uniform int uUseTexture;
+
+            out vec4 FragColor;
+
+            void main()
+            {
+                vec4 src = (uUseTexture != 0) ? texture(uTex, vUV) * vColor : vColor;
+                FragColor = src;
+            }
+            )";
+
+            m_defaultUIShaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
+        }
+        return m_defaultUIShaderProgram;
+    }
+
+    const Rect& GraphicsAPI::GetViewport() const
+    {
+        return m_viewport;
+    }
+
+    void GraphicsAPI::SetViewport(int x, int y, int width, int height)
+    {        
+        GLCall(glViewport(x, y, width, height));
+        m_viewport.x = x;
+        m_viewport.y = y;
+        m_viewport.width = width;
+        m_viewport.height = height;
+    }
+
 }

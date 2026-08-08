@@ -1,6 +1,6 @@
 #include "Engine.h"
 #include "TextComponent.h"
-
+#include "CanvasComponent.h"
 namespace why
 {
     void TextComponent::LoadProperties(const nlohmann::json& json)
@@ -34,6 +34,37 @@ namespace why
         if (m_text.empty() || !m_font || !canvas)
         {
             return;
+        }
+
+        int width = m_font->GetTexture()->GetWidth();
+        int height = m_font->GetTexture()->GetHeight();
+
+        auto pos = GetPivotPos();
+        float xOrigin = pos.x;
+        float yOrigin = pos.y;
+
+        for (const auto c : m_text)
+        {
+            const auto& desc = m_font->GetGlyphDescription(c);
+
+            float x1 = static_cast<float>(xOrigin);
+            float y1 = static_cast<float>(yOrigin);
+            float x2 = static_cast<float>(xOrigin + desc.width);
+            float y2 = static_cast<float>(yOrigin + desc.height);
+
+            float u1 = static_cast<float>(desc.x0) / static_cast<float>(width);
+            float v1 = static_cast<float>(desc.y0) / static_cast<float>(height);
+            float u2 = static_cast<float>(desc.x1) / static_cast<float>(width);
+            float v2 = static_cast<float>(desc.y1) / static_cast<float>(height);
+
+            xOrigin += desc.advance;
+
+            canvas->DrawRect(
+                glm::vec2(x1, y1), glm::vec2(x2, y2),
+                glm::vec2(u1, v2), glm::vec2(u2, v1),
+                m_font->GetTexture().get(), m_color
+            );
+
         }
     }
 

@@ -16,7 +16,12 @@ namespace why
 		int32_t g_nLogLevel = -1;
 	}
 
-	bool Engine::Init()
+	void windowSizeCallback(int width, int height)
+	{		
+		SINGLETON_PTR(GraphicsAPI)->SetViewport(0, 0, width, height);
+	}
+
+	bool Engine::Init(int width, int height)
 	{
 		std::string strLog_dirPath = 
 			SINGLETON_PTR(PathAppender)->SetSourcePath(GetExecutableDirectory()).AppendChildPath("log").GetPath();;
@@ -29,6 +34,8 @@ namespace why
 		}
 
 		SINGLETON_PTR(GraphicsAPI)->Init();
+		SINGLETON_PTR(GraphicsAPI)->SetViewport(0, 0, width, height);
+
 		m_physicsManager.Init();
 		m_audioManager.Init();
 		m_pRederQueue = std::make_unique<why::RenderQueue>();

@@ -12,7 +12,8 @@ namespace why
         Texture(int width, int height, int numChannels, unsigned char* data);
         ~Texture();
         GLuint GetID() const;
-
+        int GetWidth() const;
+        int GetHeight() const;
 
         void Init(int width, int height, int numChannels, unsigned char* data);
 
