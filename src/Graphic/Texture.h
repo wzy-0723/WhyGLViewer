@@ -1,7 +1,9 @@
 #pragma once
 
 #include <qopengl.h>
-
+#include <memory>
+#include <iostream>
+#include <unordered_map>
 namespace why
 {
     class Texture

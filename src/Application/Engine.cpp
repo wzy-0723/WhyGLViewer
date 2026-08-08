@@ -33,6 +33,8 @@ namespace why
 		m_audioManager.Init();
 		m_pRederQueue = std::make_unique<why::RenderQueue>();
 		m_pRederQueue->Init();
+		m_fontManager.Init();
+
 		m_pApplication = std::make_unique<Game>();
 		m_pInputManager = std::make_unique<why::InputManager>();
 				
@@ -47,6 +49,11 @@ namespace why
 	AudioManager& Engine::GetAudioManager()
 	{
 		return m_audioManager;
+	}
+
+	FontManager& Engine::GetFontManager()
+	{
+		return m_fontManager;
 	}
 
 	void Engine::Run()

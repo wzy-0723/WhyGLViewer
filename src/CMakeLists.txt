@@ -4,6 +4,7 @@ find_package(glm CONFIG REQUIRED)
 find_package(glog CONFIG REQUIRED)
 find_package(Bullet CONFIG REQUIRED)
 find_package(stb REQUIRED)
+find_package(Freetype REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_path(MINIAUDIO_INCLUDE_DIRS "miniaudio.h")
 find_path(CGLTF_INCLUDE_DIRS "cgltf.h")
@@ -37,6 +38,7 @@ target_include_directories(${PROJECT_NAME}
 		./Application
         ./Component
         ./Component/ui
+        ./Font
 		./Graphic
         ./Input
         ./Gui
@@ -62,6 +64,7 @@ target_link_libraries(${PROJECT_NAME}
         glm::glm
         glog::glog
         nlohmann_json::nlohmann_json
+        Freetype::Freetype
         ${BULLET_LIBRARIES}
 )
 
