@@ -19,6 +19,8 @@ namespace why
         bool HandleEvent(QEvent* e);
         void ListenMouseMove(const QPoint& point);
 
+
+        void ClearStates();
     public:
 
 
@@ -27,6 +29,13 @@ namespace why
 
         void SetMouseButtonPressed(Qt::MouseButton button, bool pressed);
         bool IsMouseButtonPressed(Qt::MouseButton button);
+
+        void SetMouseButtonWasPressed(Qt::MouseButton button, bool pressed);
+        bool WasMouseButtonPressed(Qt::MouseButton button);
+
+        void SetMouseButtonWasReleased(Qt::MouseButton button, bool pressed);
+        bool WasMouseButtonReleased(Qt::MouseButton button);
+
 
         void SetMousePositionOld(const glm::vec2& pos);
         const glm::vec2& GetMousePositionOld() const;
@@ -40,6 +49,10 @@ namespace why
     private:
         std::unordered_map<Qt::Key, bool> m_mapKey;
         std::unordered_map<Qt::MouseButton, bool> m_mapMouseButton;
+
+       std::unordered_map<Qt::MouseButton, bool> m_mouseKeyPressed;
+       std::unordered_map<Qt::MouseButton, bool> m_mouseKeyReleased;
+
 
         glm::vec2 m_mousePositionOld = glm::vec2(0.0f);
         glm::vec2 m_mousePositionCurrent = glm::vec2(0.0f);

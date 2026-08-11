@@ -63,6 +63,11 @@ namespace why
 		return m_fontManager;
 	}
 
+	UIInputSystem& Engine::GetUIInputSystem()
+	{
+		return m_uiInputSystem;
+	}
+
 	void Engine::Run()
 	{
 		SINGLETON_PTR(why::GraphicsAPI)->SetClearColor(1.0f, 1.0f, 1.0f, 1.0f);

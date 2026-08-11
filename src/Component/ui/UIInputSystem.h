@@ -1,0 +1,26 @@
+#pragma once
+
+#include <vector>
+
+namespace why
+{
+    class CanvasComponent;
+    class UIElementComponent;
+
+    class UIInputSystem
+    {
+    public:
+        void SetActive(bool active);
+        bool IsActive() const;
+        void SetCanvas(CanvasComponent* canvas);
+        void Update(float deltaTime);
+
+        std::vector<UIElementComponent*> CollectUI(CanvasComponent* canvas);
+
+    private:
+        bool m_active = false;
+        CanvasComponent* m_activeCanvas = nullptr;
+        UIElementComponent* m_hovered = nullptr;
+        UIElementComponent* m_pressed = nullptr;
+    };
+}

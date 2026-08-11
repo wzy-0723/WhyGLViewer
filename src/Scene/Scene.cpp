@@ -13,7 +13,7 @@
 #include "UIElementComponent.h"
 #include "CanvasComponent.h"
 #include "TextComponent.h"
-
+#include "ButtonComponent.h"
 namespace why
 {
     void Scene::RegisterTypes()
@@ -31,6 +31,7 @@ namespace why
         UIElementComponent::Register();
         CanvasComponent::Register();
         TextComponent::Register();
+        ButtonComponent::Register();
     }
 
     std::shared_ptr<Scene> Scene::Load(const std::string& path)

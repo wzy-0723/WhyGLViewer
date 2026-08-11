@@ -107,4 +107,41 @@ namespace why
         return m_mousePositionChanged;
     }
 
+
+    void InputManager::SetMouseButtonWasPressed(Qt::MouseButton button, bool pressed)
+    {
+
+        m_mouseKeyPressed[button] = pressed;
+    }
+
+    bool InputManager::WasMouseButtonPressed(Qt::MouseButton button)
+    {
+
+        return m_mouseKeyPressed[button];
+    }
+
+    void InputManager::SetMouseButtonWasReleased(Qt::MouseButton button, bool pressed)
+    {
+
+        m_mouseKeyReleased[button] = pressed;
+    }
+
+    bool InputManager::WasMouseButtonReleased(Qt::MouseButton button)
+    {
+
+        return m_mouseKeyReleased[button];
+    }
+
+    void InputManager::ClearStates()
+    {
+        SetMousePositionChanged(false);
+        for (auto k : m_mouseKeyPressed)
+        {
+            SetMouseButtonWasPressed(k.first, false);
+        }
+        for (auto k : m_mouseKeyReleased)
+        {
+            SetMouseButtonWasReleased(k.first, false);
+        }
+    }
 }

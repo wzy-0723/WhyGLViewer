@@ -8,6 +8,7 @@
 #include "PhysicsManager.h"
 #include "AudioManager.h"
 #include "FontManager.h"
+#include "UIInputSystem.h"
 namespace why
 {
     class Engine
@@ -27,7 +28,7 @@ namespace why
         PhysicsManager& GetPhysicsManager() { return m_physicsManager; };
         AudioManager& GetAudioManager();
         FontManager& GetFontManager();
-
+        UIInputSystem& GetUIInputSystem();
         void SetScene(Scene* scene) { m_pCurrentScene.reset(scene); };
         Scene* GetScene() { return m_pCurrentScene.get(); };
 
@@ -49,5 +50,7 @@ namespace why
         FileSystem m_fileSystem;
         TextureManager m_textureManager;
         PhysicsManager m_physicsManager;
+
+        UIInputSystem m_uiInputSystem;
     };
 }

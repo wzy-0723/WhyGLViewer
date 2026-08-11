@@ -16,7 +16,7 @@
 #include "SpriteComponent.h"
 #include "CanvasComponent.h"
 #include "TextComponent.h"
-
+#include "ButtonComponent.h"
 
 void Game::RegisterTypes()
 {
@@ -115,6 +115,19 @@ bool Game::Init()
     auto canvasComponent = new why::CanvasComponent();
     canvas->AddComponent(canvasComponent);
 
+    // btn
+    auto& uiInput = SINGLETON_PTR(why::Engine)->GetUIInputSystem();
+    uiInput.SetActive(true);
+    uiInput.SetCanvas(canvasComponent);
+
+    auto button = m_scene->CreateObject("Button", canvas);
+    button->SetPosition2D(glm::vec2(300.0f, 300.0f));
+    auto buttonComponent = new why::ButtonComponent();
+    buttonComponent->SetRect(glm::vec2(150.0f, 50.0f));
+    buttonComponent->SetColor(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f));
+    button->AddComponent(buttonComponent);
+
+    //text
     auto text = m_scene->CreateObject("Text", canvas);
     text->SetPosition2D(glm::vec2(300.0f, 300.0f));
     auto textComponent = new why::TextComponent();
