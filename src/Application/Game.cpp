@@ -84,57 +84,57 @@ bool Game::Init()
     
     // 场景加载之后
     //3D
-    //auto scene = why::Scene::Load("scenes/scene.sc");
-    //m_scene = scene;
-    //SINGLETON_PTR(why::Engine)->SetScene(scene.get());
+    auto scene = why::Scene::Load("scenes/scene.sc");
+    m_scene = scene;
+    SINGLETON_PTR(why::Engine)->SetScene(scene.get());
 
-    //2D
-    m_scene = std::make_shared<why::Scene>();
-    SINGLETON_PTR(why::Engine)->SetScene(m_scene.get());
+    ////2D
+    //m_scene = std::make_shared<why::Scene>();
+    //SINGLETON_PTR(why::Engine)->SetScene(m_scene.get());
 
-    auto sprite = m_scene->CreateObject("Sprite");
-    auto spriteComponent = new why::SpriteComponent();
+    //auto sprite = m_scene->CreateObject("Sprite");
+    //auto spriteComponent = new why::SpriteComponent();
 
-    auto texture = why::Texture::Load("textures/brick.png");
-    spriteComponent->SetTexture(texture);
+    //auto texture = why::Texture::Load("textures/brick.png");
+    //spriteComponent->SetTexture(texture);
 
-    sprite->AddComponent(spriteComponent);
-    sprite->SetPosition2D(glm::vec2(500.0f, 500.0f));
+    //sprite->AddComponent(spriteComponent);
+    //sprite->SetPosition2D(glm::vec2(500.0f, 500.0f));
 
-    spriteComponent->SetSize(glm::vec2(200.0f, 100.0f));
-    spriteComponent->SetUpperRightUV(glm::vec2(2.0f, 1.0f));
-    sprite->SetRotation2D(glm::radians(45.0f));
+    //spriteComponent->SetSize(glm::vec2(200.0f, 100.0f));
+    //spriteComponent->SetUpperRightUV(glm::vec2(2.0f, 1.0f));
+    //sprite->SetRotation2D(glm::radians(45.0f));
 
 
-    auto camera = m_scene->CreateObject("Camera");
-    auto cameraComponent = new why::CameraComponent();
-    camera->AddComponent(cameraComponent);
-    m_scene->SetMainCamera(camera);
+    //auto camera = m_scene->CreateObject("Camera");
+    //auto cameraComponent = new why::CameraComponent();
+    //camera->AddComponent(cameraComponent);
+    //m_scene->SetMainCamera(camera);
 
-    auto canvas = m_scene->CreateObject("Canvas");
-    auto canvasComponent = new why::CanvasComponent();
-    canvas->AddComponent(canvasComponent);
+    //auto canvas = m_scene->CreateObject("Canvas");
+    //auto canvasComponent = new why::CanvasComponent();
+    //canvas->AddComponent(canvasComponent);
 
-    // btn
-    auto& uiInput = SINGLETON_PTR(why::Engine)->GetUIInputSystem();
-    uiInput.SetActive(true);
-    uiInput.SetCanvas(canvasComponent);
+    //// btn
+    //auto& uiInput = SINGLETON_PTR(why::Engine)->GetUIInputSystem();
+    //uiInput.SetActive(true);
+    //uiInput.SetCanvas(canvasComponent);
 
-    auto button = m_scene->CreateObject("Button", canvas);
-    button->SetPosition2D(glm::vec2(300.0f, 300.0f));
-    auto buttonComponent = new why::ButtonComponent();
-    buttonComponent->SetRect(glm::vec2(150.0f, 50.0f));
-    buttonComponent->SetColor(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f));
-    button->AddComponent(buttonComponent);
+    //auto button = m_scene->CreateObject("Button", canvas);
+    //button->SetPosition2D(glm::vec2(300.0f, 300.0f));
+    //auto buttonComponent = new why::ButtonComponent();
+    //buttonComponent->SetRect(glm::vec2(150.0f, 50.0f));
+    //buttonComponent->SetColor(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f));
+    //button->AddComponent(buttonComponent);
 
-    //text
-    auto text = m_scene->CreateObject("Text", canvas);
-    text->SetPosition2D(glm::vec2(300.0f, 300.0f));
-    auto textComponent = new why::TextComponent();
-    text->AddComponent(textComponent);
-    textComponent->SetText("Some Text");
-    textComponent->SetFont("Fonts/arial.ttf", 24);
-    textComponent->SetColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    ////text
+    //auto text = m_scene->CreateObject("Text", canvas);
+    //text->SetPosition2D(glm::vec2(300.0f, 300.0f));
+    //auto textComponent = new why::TextComponent();
+    //text->AddComponent(textComponent);
+    //textComponent->SetText("Some Text");
+    //textComponent->SetFont("Fonts/arial.ttf", 24);
+    //textComponent->SetColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
     return true;
 }

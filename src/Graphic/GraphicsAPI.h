@@ -10,10 +10,10 @@ namespace why
 {
     enum class BlendMode
     {
-        Disabled,
-        Alpha,
-        Additive,
-        Multiply
+        Disabled,   //关闭混合，直接覆盖目标颜色，不透明渲染
+        Alpha,      //src * srcAlpha + dst * (1-srcAlpha)，适用透明贴图、UI、半透明物体
+        Additive,   //src*1 + dst*1，适用颜色越叠加越亮光效、粒子、发光特效、光晕
+        Multiply    //src * dst + dst * 0 = dst * src，适用：阴影贴图、遮罩、暗化图层
     };
 
     struct Rect
